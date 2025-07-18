@@ -5,12 +5,12 @@
     background-color: #a1c8e3;
     margin-top: 25px;
     /* NOTE: padding: [top] [right] [bottom] [left]; */
-    padding: 15px 5px 1px 5px;
+    padding: 10px 10px 10px 10px;
 }
 
 footer{
     display:flex;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     /* margin-top: 25px;
     margin-bottom: 0px; */
     /* padding-top: 10px; */

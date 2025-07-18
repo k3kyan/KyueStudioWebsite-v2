@@ -5,7 +5,7 @@ const Footer = () => {
   return (
       <>
       <div className="footer">
-          <header>
+          <footer>
   
               
               <div>
@@ -22,7 +22,7 @@ const Footer = () => {
                   <a href="/TikTok">TT</a>
                   <a href="/Steam">St</a>
               </nav>
-          </header>
+          </footer>
       </div>
       </>
   )
