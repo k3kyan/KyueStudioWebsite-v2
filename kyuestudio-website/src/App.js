@@ -1,5 +1,5 @@
-// import './App.css';
-import './index.css';
+import './App.css';
+// import './index.css';
 import Header from './components/home/header/Header';
 import Footer from './components/home/footer/Footer';
 import HomePageContent from './components/home/homepagecontent/HomePageContent';
