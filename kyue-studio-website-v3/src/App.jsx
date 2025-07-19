@@ -1,54 +1,27 @@
 import { useState } from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-
-
-
-function Home() {
-  return <h1>Home Page</h1>;
-}
-
-function About() {
-  return <h1>About Page</h1>;
-}
-
-function NotFound() {
-  return <h1>404 page not found</h1>;
-}
-
-
-
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Home  from './pages/home/Home'
+import About from './pages/about/About'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
     <BrowserRouter>
-      <nav style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-      </nav>
+      <Header />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main style={{ padding: '1rem' }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<h1>404 - Not Found</h1>} />
+        </Routes>
+      </main>
+
+      <Footer />
     </BrowserRouter>
-
-
-
-
-
-
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
