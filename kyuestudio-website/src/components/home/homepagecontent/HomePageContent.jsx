@@ -1,9 +1,8 @@
 import React from 'react'
 import './HomePageContent.css';
 import HomePageBanner from '../../../assets/images/HomePageBanner.jpg';
-import BlogCard from '../../cards/blogcards/BlogCard';
-import TEMPBlogPostThumbnail from '../../../assets/images/BlogPostThumbnail.PNG';
 import BlogCardsGrid from '../../cards/blogcards-grid/BlogCardsGrid';
+import ProjectCardsGrid from '../../cards/projectcards-grid/ProjectCardsGrid';
 
 const HomePageContent = () => {
   return (
@@ -14,7 +13,7 @@ const HomePageContent = () => {
 
         <div>
             <h1>Projects</h1>
-            <p>TODO</p>
+            <ProjectCardsGrid />
         </div>
 
         <div>
