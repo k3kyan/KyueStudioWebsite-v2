@@ -1,0 +1,20 @@
+.homepagebanner{
+  /* width: 100%; */
+  max-width: 90%;
+  max-height: 400px;
+  display: block;
+  margin: 0 auto;
+  /* align-items: center; */
+  /* object-fit: cover; TODO: ?? what does this do? from Figma*/
+  border-radius: 24px;
+  /* overflow: hidden; TODO: ?? what does this do? from Figma*/
+  /* position: relative; TODO: ?? what does this do? from Figma */
+}
+
+.homepage-welcome {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+  color: gray;
+}

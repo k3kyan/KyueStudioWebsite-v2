@@ -10,11 +10,17 @@ function App() {
     <>
       {/* TODO: reduce code by making a component with these 3 things for page templates */}
       < Header/>
-      < PageTitle title="Home"/>
-      < HomePageContent/>
-      < Footer/>
-    </>
 
+      {/* TODO: I kinda dont like that the footer is below the initial full screen but thats a later problem tbh */}
+      <div className="app-container">
+        <main className="main-content">
+          <PageTitle title="Home"/>
+          <HomePageContent />
+        </main>
+        < Footer/>
+      </div>
+
+    </>
   );
 }
 
