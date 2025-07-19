@@ -13,8 +13,8 @@ phases:
             - echo "Building Vite React app..."
             - npm run build
             
-    artifacts:
-        files:
-            - '**/*'
-        base-directory: dist
+artifacts:
+    files:
+        - '**/*'
+    base-directory: dist
 
