@@ -1,4 +1,4 @@
-.blog-grid {
+/* .blog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 24px;
@@ -6,12 +6,40 @@
   padding: 32px;
   max-width: 1200px;
   margin: 0 auto;
-}
+} */
 
 /* Responsive: Stack on small screens */
-@media (max-width: 900px) {
+/* @media (max-width: 900px) {
   .blog-grid {
     grid-template-columns: 1fr;
     row-gap: 50px;
+  }
+} */
+
+/* TODO: fix the row not stacking all 3 latest blog posts into one single row */
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 2rem;
+  justify-items: center;
+}
+
+@media (max-width: 1200px) {
+  .blog-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .blog-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
   }
 }

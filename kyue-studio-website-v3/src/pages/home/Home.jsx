@@ -12,22 +12,22 @@ const Home = () => {
         <img src={HomePageBanner} alt="Home Page Banner" className="homepagebanner"/>
 
         <div>
-            <h1>Projects</h1>
+            <h3 style={{textAlign: 'center'}}>Projects</h3>
             <ProjectCardsRow />
         </div>
 
-        <div>
-            <h1>Latest Blog Posts</h1>
+        <div style={{textAlign: 'center'}}>
+            <h3>Latest Blog Posts</h3>
             <BlogCardsRow />
         </div>
 
-        <div>
-            <h1>Latest Artworks</h1>
+        <div style={{textAlign: 'center'}}>
+            <h3>Latest Artworks</h3>
             TODO: last
         </div>
 
-        <div>
-            <h1>Latest Social Media Posts</h1>
+        <div style={{textAlign: 'center'}}>
+            <h3>Latest Social Media Posts</h3>
             TODO: last
         </div>
     </div>

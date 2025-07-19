@@ -1,0 +1,22 @@
+.blog-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1rem 2rem;
+}
+
+.blog-layout > * {
+  flex: 1;
+}
+
+.blog-layout > :first-child {
+  max-width: 250px; /* Fixed width for sidebar filter */
+}
+
+
+/* Stacks filter on top when screen is small */
+@media (max-width: 768px) {
+  .blog-layout {
+    flex-direction: column;
+  }
+}

@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <Header />
 
-      <main style={{ padding: '1rem' }}>
+      <main style={{ padding: '0 4rem 4rem' }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<Blog />} />

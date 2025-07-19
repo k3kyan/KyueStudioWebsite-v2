@@ -1,0 +1,42 @@
+.blog-filter {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 220px;
+  font-family: sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-search {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.filter-title {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  color: #555;
+}
+
+.tag-item.active {
+  font-weight: bold;
+  color: black;
+}
