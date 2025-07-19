@@ -6,6 +6,8 @@
     margin-top: 25px;
     /* NOTE: padding: [top] [right] [bottom] [left]; */
     padding: 5px 10px;
+    width: 100vw;
+    box-sizing: border-box;
 }
 
 
@@ -16,6 +18,8 @@ footer{
     /* margin-top: 25px;
     margin-bottom: 0px; */
     /* padding-top: 10px; */
+    width: 100vw;
+    box-sizing: border-box;
 }
 
 footer a{

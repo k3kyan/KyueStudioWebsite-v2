@@ -7,6 +7,7 @@ import Home  from './pages/home/Home'
 import About from './pages/about/About'
 import Shop from './pages/shop/Shop';
 import Blog from './pages/blog/Blog';
+import Art from './pages/art/Art';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/art" element={<Art />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<h1>404 - Not Found</h1>} />

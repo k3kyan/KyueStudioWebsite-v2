@@ -15,6 +15,7 @@ function Header() {
       <nav style={{ display: 'flex', gap: '1rem' }}>
         <Link to="/">Home</Link>
         <Link to="/blog">Blog</Link>
+        <Link to="/art">Art</Link>
         <Link to="/shop">Shop</Link>
         <Link to="/about">About</Link>
       </nav>
