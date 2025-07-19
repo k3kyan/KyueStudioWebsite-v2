@@ -23,10 +23,12 @@ const Home = () => {
 
         <div>
             <h1>Latest Artworks</h1>
+            TODO: last
         </div>
 
         <div>
             <h1>Latest Social Media Posts</h1>
+            TODO: last
         </div>
     </div>
   )

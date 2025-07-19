@@ -1,9 +1,14 @@
 import React from 'react'
+import Biography from '../../components/bio/Biography'
+import PageTitle from '../../components/pagetitle/PageTitle'
+import ContactForm from '../../components/forms/contactform/ContactForm'
 
 const About = () => {
   return (
     <div>
-      <h1>About Us: This is the About Page</h1>
+      <PageTitle title="About" />
+      <Biography />
+      <ContactForm />
     </div>
   )
 }
