@@ -56,3 +56,11 @@
 .blog-card-link:hover {
   transform: translateY(-4px);
 }
+
+.tag {
+  background-color: #eee;
+  padding: 4px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}

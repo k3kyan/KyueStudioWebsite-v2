@@ -5,6 +5,8 @@ import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import Home  from './pages/home/Home'
 import About from './pages/about/About'
+import Shop from './pages/shop/Shop';
+import Blog from './pages/blog/Blog';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
       <main style={{ padding: '1rem' }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/shop" element={<Shop />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<h1>404 - Not Found</h1>} />
         </Routes>

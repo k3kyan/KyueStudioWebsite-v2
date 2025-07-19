@@ -20,6 +20,12 @@ const BlogCard = ({ image, title, date, tag, link = "#" }) => {
           <div className="blog-tag">
             <FaTag className="icon" />
             <span>{tag}</span>
+            {/* TODO: Fix tags not showing up, need to iterate over a list of tags */}
+              {/* {tags.map((tag, idx) => (
+                <span key={idx} className="tag">
+                  {tag}
+                </span>
+              ))} */}
           </div>
         </div>
         
