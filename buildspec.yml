@@ -6,15 +6,17 @@ phases:
             nodejs: latest
         commands:
             - echo "Installing dependencies..."
+            - cd kyue-studio-website-v3
             - npm install
 
     build:
         commands:
             - echo "Building Vite React app..."
+            - cd kyue-studio-website-v3
             - npm run build
             
 artifacts:
     files:
         - '**/*'
-    base-directory: dist
+    base-directory: kyue-studio-website-v3/dist
 
