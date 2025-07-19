@@ -8,6 +8,18 @@
     padding: 10px 10px 10px 10px;
 }
 
+/* TODO: FAILED TO IMPLEMENT TREES AT BOTTOM OF PAGE */
+/* .footer::before {
+  content: '';
+  display: block;
+  height: 40px;
+  background-image: url('../../../assets/images/footer-pattern.png');
+  background-repeat: repeat-x;
+  background-position: center;
+} */
+
+
+
 footer{
     display:flex;
     justify-content: space-between;

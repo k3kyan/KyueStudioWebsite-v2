@@ -4,9 +4,12 @@ import './Footer.css';
 const Footer = () => {
   return (
       <>
+      
+      {/* TODO: FAILED TO IMPLEMENT TREES AT BOTTOM OF PAGE */}
+      {/* <div className="footer-pattern"></div> */}
+      
       <div className="footer">
           <footer>
-  
               
               <div>
                 2025 Kyue Studio

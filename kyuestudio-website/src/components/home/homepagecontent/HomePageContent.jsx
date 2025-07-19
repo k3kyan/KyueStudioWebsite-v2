@@ -1,11 +1,8 @@
 import React from 'react'
-// import '../../../App.css';
-import '../../../index.css';
 
 const HomePageContent = () => {
   return (
     <div>
-      {/* <header >Home Page Content</header> */}
       <div className="header" class="text-3xl font-bold underline">
         Home Page Content using TailwindCSS
       </div>
