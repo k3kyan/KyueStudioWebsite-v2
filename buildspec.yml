@@ -12,7 +12,6 @@ phases:
     build:
         commands:
             - echo "Building Vite React app..."
-            - cd kyue-studio-website-v3
             - npm run build
             
 artifacts:
