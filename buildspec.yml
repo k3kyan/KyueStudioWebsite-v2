@@ -17,5 +17,5 @@ phases:
 artifacts:
     files:
         - '**/*'
-    base-directory: dist
+    base-directory: kyue-studio-website-v3/dist
 
