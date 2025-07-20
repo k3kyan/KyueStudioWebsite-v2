@@ -2,6 +2,7 @@ import React from 'react'
 import './Footer.css'
 import SteamLogo from '../../assets/images/global/steam-logo.jpg'
 import TEMP_SocMedLogo from '../../assets/images/global/steam-logo.jpg'
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -10,6 +11,7 @@ const Footer = () => {
       <p>© 2025 Kyue Studio</p>
 
       <nav>
+        {/* TODO: Get rid of all a hrefs and replace with Link from React Router */}
         <a href="/LinkedIn"><img src={TEMP_SocMedLogo} alt="LinkedIn" /></a>
         <a href="/Email"><img src={TEMP_SocMedLogo} alt="Email" /></a>
         <a href="/Twitter"><img src={TEMP_SocMedLogo} alt="Twitter" /></a>
