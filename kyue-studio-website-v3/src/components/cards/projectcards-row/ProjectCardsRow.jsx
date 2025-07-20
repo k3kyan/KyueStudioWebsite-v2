@@ -20,18 +20,6 @@ const ProjectCardsGrid = () => {
             info="webcomic summary plot meow meow meow" 
             link="/"
         />
-        <ProjectCard
-            image={TEMP_ProjectThumbnail}
-            title="Webcomic" 
-            info="webcomic summary plot meow meow meow" 
-            link="/"
-        />
-        <ProjectCard
-            image={TEMP_ProjectThumbnail}
-            title="Webcomic" 
-            info="webcomic summary plot meow meow meow" 
-            link="/"
-        />
     </section>
   )
 }
