@@ -6,10 +6,10 @@ function Header() {
   return (
     <header style={{ background: '#eee', padding: '1rem' }}>
         <div className="navbar-logo">
-                <a href='/'>
+                <Link to="/">
                     <img src={Logo} alt="Kyue Studio Logo" />
                     Kyue Studio
-                </a>
+                </Link>
             </div>
 
       <nav style={{ display: 'flex', gap: '1rem' }}>
