@@ -17,6 +17,7 @@ function App() {
       <main style={{ padding: '0 4rem 4rem' }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/index.html" element={<Home />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/art" element={<Art />} />
           <Route path="/shop" element={<Shop />} />
