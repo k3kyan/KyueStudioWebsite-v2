@@ -8,6 +8,7 @@ import About from './pages/about/About'
 import Shop from './pages/shop/Shop';
 import Blog from './pages/blog/Blog';
 import Art from './pages/art/Art';
+import Login from './pages/login/Login';
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<h1>404 - Not Found</h1>} />
+
+          {/* not protected, but close to protected routes */}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
 
