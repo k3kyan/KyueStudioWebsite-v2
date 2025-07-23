@@ -12,9 +12,13 @@ echo "Running virtual environment..."
 # install fastAPI (only needed once at initialization)
 # pip install fastapi
 
+# install pydantic (only needed once at initialization)
+# pip install pydantic
+# check that pydantic is installed
+# how ??? idk
+
 # install uvicorn (only needed once at initialization)
 # pip install uvicorn
-
 
 # check that uvicorn is installed
 # should only be installed in venv, so only will show version if venv is running

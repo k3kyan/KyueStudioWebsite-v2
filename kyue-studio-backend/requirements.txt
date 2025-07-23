@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+# pydantic
+# optional: python venv virtual environment
+
+
+
+# pip install -r requirements.txt
