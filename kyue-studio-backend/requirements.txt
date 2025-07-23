@@ -1,7 +1,7 @@
 fastapi
 uvicorn
-# pydantic
-# optional: python venv virtual environment
+pydantic
+# separately, before installing these (since these dependencies should be bundled in a python virtual environment): python venv virtual environment
 
 
 

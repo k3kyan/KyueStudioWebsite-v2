@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # ONLY RUN THIS SCRIPT IF VENV AND UVICORN ARE NOT RUNNING ALREADY 
+# This script runs the full backend from beginning with nothing activated or running
 
 # running on git bash terminal
 # run the virtual environment, need to run for fastapi and uvicorn to work
