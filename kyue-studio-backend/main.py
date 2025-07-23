@@ -3,34 +3,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
-
-
-# fastapi can automatically validate data coming in
-# and format data going out
-# based on Pydantic models 
-# TODO: PUT MODELS IN A SEPARATE FILE TO KEEP MAIN.PY CLEAN
-class Fruit(BaseModel):
-    name: str
-
-class Fruits(BaseModel):
-    fruits: List[Fruit]
-    
-    
-    
-    
+from routes.fruit_routes import fruit_router
 
 # The FastAPI application/instance
 app = FastAPI()
 
 
 # Origins that are allowed, and given access to our API
+# CORS setup
 origins = [
     "http://localhost:3000",
     "http://localhost:8000",
     # "https://kyuestudiowebsite.s3.us-east-2.amazonaws.com/index.html", TODO:?? is this a valid origin? prob. idk if its what i actually use tho for AWS later
     # "https://kyuestudio.com/" TODO: probably this origin...? probably, i'll get to that when i get to AWS migration
 ]
-
 
 
 # FastAPI CORS middleware
@@ -46,30 +32,9 @@ app.add_middleware(
 )
 
 
-
-# TODO: replace this with a call to a json file (separate file..?). Prep for AWS DynamoDB calls. 
-# TEMP_DATABASE
-TEMP_DB = {"fruits": [
-    {"name": "apple"},
-    {"name": "banana"},
-    {"name": "orange"}
-]}
-
-
-# TODO: move these functions/endpoints to a different file so main.py is cleaner. 
-# need more modular abstraction separation
-
-# returns data in the format model of class Fruits
-@app.get("/fruits", response_model=Fruits)
-def get_fruits():
-    return Fruits(fruits=TEMP_DB["fruits"])
-
-
-@app.post("/fruits", response_model=Fruit)
-def add_fruit(fruit: Fruit):
-    TEMP_DB["fruits"].append(fruit)
-    return fruit
-
+# registers APIRouters from other files here
+# (in future, will include other routers like blog_router, cart_router, order_router, etc for diff APIs and db's and endpoints and paths)
+app.include_router(fruit_router)
 
 
 # runs the uvicorn server
