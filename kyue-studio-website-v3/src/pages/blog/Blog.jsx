@@ -4,6 +4,10 @@ import PageTitle from '../../components/pagetitle/PageTitle';
 import BlogGrid from '../../components/cards/blogcards-grid/BlogCardsGrid';
 import TEMP_BlogPostThumbnail from '../../assets/images/blogs/BlogPostThumbnail.PNG';
 import Filter from '../../components/filter/Filter';
+// import TempFruitsAPIForm from '../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIForm';
+// import TempFruitsAPIShowList from '../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIShowList';
+import AddFruitForm from '../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIForm';
+import FruitList from '../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIShowList';
 
 // TODO: Add that bar that separates the blog posts into maximums of 12 groups <prev 1 2 3 4 ... next>
 
@@ -110,6 +114,13 @@ const Blog = () => {
           <BlogGrid posts={filteredPosts} />
         </div>
       </div>
+
+
+      {/* TEMP: Just to show that backend is working. DELETE LATER!! */}
+      {/* <TempFruitsAPIForm />
+      <TempFruitsAPIShowList />  */}
+      {/* <AddFruitForm /> (needs parameter so thats why it didnt render correctly)*/} 
+      <FruitList /> 
     </div>
   )
 }

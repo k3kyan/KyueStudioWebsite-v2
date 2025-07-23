@@ -1,0 +1,31 @@
+{
+  "fruits": [
+    {
+      "name": "apple"
+    },
+    {
+      "name": "banana"
+    },
+    {
+      "name": "pineapple"
+    },
+    {
+      "name": "orange"
+    },
+    {
+      "name": "string"
+    },
+    {
+      "name": "peaches"
+    },
+    {
+      "name": "20205"
+    },
+    {
+      "name": "meow"
+    },
+    {
+      "name": "2032053"
+    }
+  ]
+}
