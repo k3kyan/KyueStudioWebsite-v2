@@ -6,6 +6,7 @@ npm create vite@latest "$APP_NAME" -- --template react
 cd "$APP_NAME"
 npm install
 npm install react-router-dom
+npm install axios #TODO: I installed this while the python environment was running? not sure if that would affect anything ???
 
 echo "Created project successfully"
 

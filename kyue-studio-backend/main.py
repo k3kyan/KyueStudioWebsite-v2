@@ -14,10 +14,11 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://localhost:8000",
+    # "http://localhost:5173/", MAKE SURE TO NOT INCLUDE THAT LAST / !!!! that messed up the connectivity bc its not a valid origin. 
+    "http://localhost:5173",
     # "https://kyuestudiowebsite.s3.us-east-2.amazonaws.com/index.html", TODO:?? is this a valid origin? prob. idk if its what i actually use tho for AWS later
     # "https://kyuestudio.com/" TODO: probably this origin...? probably, i'll get to that when i get to AWS migration
 ]
-
 
 # FastAPI CORS middleware
 # CORS = cross-origin resource sharing
