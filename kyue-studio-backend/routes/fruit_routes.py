@@ -30,5 +30,6 @@ def get_fruits():
 @fruit_router.post("/fruits", response_model=Fruit)
 def add_fruit(fruit: Fruit):
     data = load_temp_db()
-    data["fruits"].append(fruit)
+    data["fruits"].append(fruit.model_dump()) #NECESSARY FOR SAVING TO JSON!! Needs to convert to json format, or else errors. .model_dump() = .dict()
+    save_fruit_db(data)
     return fruit
