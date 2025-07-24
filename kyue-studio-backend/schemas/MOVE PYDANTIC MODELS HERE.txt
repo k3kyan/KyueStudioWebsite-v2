@@ -1,3 +1,11 @@
-TODO: DELETE THIS FILE ONCE YOU REWORK THE SCHEMAS X MODELS ARCHITECTURE!!!!!
+TODO: DELETE THIS FILE ONCE YOU REWORK THE SCHEMAS X MODELS + service module methods ARCHITECTURE!!!!!
 
 THIS FILE IS JUST A REMINDER AND PLACEHOLDER !!!
+
+
+
+See todo list in google doc research doc
+
+1. schemas: pydantic models only
+2. models: db model formatting + converting
+3. services: use models to interact with DB (read, write, find, update, etc)
