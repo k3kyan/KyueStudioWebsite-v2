@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // import AddFruitForm from './AddFruitForm';
 import AddFruitForm from './TempFruitsAPIForm';
-import api from '../../../api/TEMP_fruitAPI';
+import api from '../../../api/fastapi';
 
 const FruitList = () => {
   const [fruits, setFruits] = useState([]);

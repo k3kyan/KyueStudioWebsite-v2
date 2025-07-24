@@ -3,7 +3,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
-from routes.fruit_routes import fruit_router
+from routes.fruit_routes import fruit_router #TEMP for testing
+# from routes.login_routes import login_router
+from routes import fruit_routes, login_routes
 
 # The FastAPI application/instance
 app = FastAPI()
@@ -36,6 +38,7 @@ app.add_middleware(
 # registers APIRouters from other files here
 # (in future, will include other routers like blog_router, cart_router, order_router, etc for diff APIs and db's and endpoints and paths)
 app.include_router(fruit_router)
+app.include_router(login_routes.login_router)
 
 
 # runs the uvicorn server
