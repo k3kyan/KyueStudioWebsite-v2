@@ -38,6 +38,9 @@
     },
     {
       "name": "without \", token: str = Depends(oauth2_schema)\" in the header :D"
+    },
+    {
+      "name": "authorized meow"
     }
   ]
 }

@@ -3,12 +3,11 @@
 
 # TODO: LATER: i'm going to implement the security and encryption stuff later bc idk how it will work w AWS
 
-import jwt #not installed ????
 from fastapi import HTTPException, status, APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm #TODO: RESEARCH: what is OAuth2PasswordRequestForm??
 from typing import Optional
-from datetime import datetime, timedelta
-# from jose import jwt # ??????
+from datetime import datetime, timedelta, timezone
+from jose import jwt
 
 # endpoint for token retrieval
 # this says "this tokenUrl will be required to receive token for our schema"
@@ -19,17 +18,30 @@ SECRET_KEY = "725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-
-
 router = APIRouter(
     # prefix="/auth",
     # tags=["auth"],
     # responses={404: {"description": "Not found"}}
 )
 
+# Generates JWT Token
+# From Catalan Stefan and Tech w Tim and Ashutosh Pawar
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+
 # def verify_password(plain_password, hashed_password):
 #     return plain_password == hashed_password
 
+# ?? i think i already implemented this as "get_token" in authentication_routes.py (jk i also called it authenticate_user in authentication_routes.py)
 # def authenticate_user(username: str, password: str):
 #     user = get_user_from_db(username)
 #     if not user:
@@ -37,18 +49,6 @@ router = APIRouter(
 #     if not verify_password(password, user.hashed_password):
 #         return False
 #     return user
-
-
-# From Catalan Stefan and Tech w Tim
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
 
 
 # async def get_current_user(token: str = Depends(oauth2_scheme)):

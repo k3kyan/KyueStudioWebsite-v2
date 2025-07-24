@@ -6,6 +6,7 @@ from models.login_models import Login
 # actually i wont need to hash or decrypt a password bc it'll be handled elsewhere outside of local, so just use substitute data for now ig
 
 
+
 def get_user_from_db(request: Login):
     # TODO: replace with logic to get info from actual database once hooked up to aws
     username = "tempUsername"
