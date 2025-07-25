@@ -15,6 +15,8 @@ def login(request: Login):
     get_user_from_db(request)
     return {"TEMP: correct login info"}
 
+# TODO: endpoint for logging out. only shows up when logged in. 
+
 # @login_router.post("/token")
 # async def login_for_access_token(form_data: ):
 # idk, see tech w tim, but this is used for getting a token once you successfully login and authenticate the user i think ... ?? 
