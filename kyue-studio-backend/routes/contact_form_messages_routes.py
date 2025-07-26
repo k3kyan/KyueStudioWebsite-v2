@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagEnum
-from services.contact_form_messages_service import load_tags
+from services.contact_form_messages_service import load_tags, load_messages, save_message, delete_message
 from typing import List
 
 contact_form_router = APIRouter(
@@ -20,15 +20,17 @@ contact_form_router = APIRouter(
 def get_contact_form_tags_enums():
     return load_tags()
 
-# probably protected
-# @contact_form_router.get("/messages-list")
-# def get_contact_form_messages():
-#     return
+# TODO: probably protected
+@contact_form_router.get("/messages-list")
+def get_contact_form_messages():
+    return load_messages()
 
 # @contact_form_router.post("/messages")
 # def submit_contact_form_message(contact_form_message: ContactFormMessage):
+# save_message()
 #     return
 
 # @contact_form_router.delete("/messages")
 # def delete_contact_form_messages():
+# delete_message()
 #     return

@@ -1,6 +1,5 @@
 from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagEnum
 from typing import List
-# from models.contact_form_messages_models import ContactFormMessageModel
 
 class ContactFormMessageModel:
     def __init__(
@@ -18,19 +17,6 @@ class ContactFormMessageModel:
         self.subject = subject
         self.tags = tags  # should be a list of string values like ["Bug Report", "Collaboration"]
         self.message = message
-        
-    # Actually jk im not gonna use this, doesnt seem as reliable or straightforward, even if more concise
-    # # WARNING: This parameter more concise, BUT: its locking this constructor to only accept Pydantic schemas, so you have to use it like this now:
-    # # VALID: ContactFormMessageModel(ContactFormMessage(...)) 
-    # # INVALID: ContactFormMessageModel("Kelli", "Y", "k@k.com", ...)
-    # def __init__(self, contact_form_message: ContactFormMessage):
-    #     self.firstName = contact_form_message.firstName
-    #     self.lastName = contact_form_message.lastName
-    #     self.email = contact_form_message.email
-    #     self.subject = contact_form_message.subject
-    #     self.tags = contact_form_message.tags 
-    #     self.message = contact_form_message.message
-        
         
     # Method to create a Model from a Schema
     # "from_schema()" is more standard naming convention for fastapi here, but i find it confusing for now, may change later
