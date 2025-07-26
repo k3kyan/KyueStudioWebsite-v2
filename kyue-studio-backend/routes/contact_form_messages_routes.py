@@ -21,20 +21,16 @@ contact_form_router = APIRouter(
 # - submit new message in contact form
 # - delete messages
 
-@contact_form_router.get("/tags", response_model=List[TagEnum]) # DON'T FORGET RESPONSE BODY!!!! Otherwise it wont show up in SwaggerUI
+# Get list of tags, mostly for frontend to list out in a dropdown
+@contact_form_router.get("/tags", response_model=List[TagEnum]) # REMINDER: FORGETFUL: DON'T FORGET RESPONSE BODY!!!! Otherwise it wont show up in SwaggerUI
 def get_contact_form_tags_enums():
     return load_tags()
 
-# TODO: probably protected
 # Get list of messages
 @contact_form_router.get("/messages")
-def get_contact_form_messages(): # (TODO: add later in a single commit to highlight lol) token: str = Depends(oauth2_scheme)
+def get_contact_form_messages(token: str = Depends(oauth2_scheme)):
     return load_messages() #TODO: RESEARCH: should i be making this into a schema ...? ContactFormMessageModle.to_schema() ?? but doesnt the ** already do that (inside the method)?
 
-
-# From Fruits.py
-# # @fruit_router.post("/fruits", response_model=FruitSchema)
-# # def add_fruit(fruit: FruitSchema, token: str = Depends(oauth2_scheme)): # oh, all i needed to do to secure the endpoint was add the this "token: str = Depends(oauth2_scheme)" parameter in the endpoint method. p cool!!
 # Submit a message to db
 @contact_form_router.post("/message", response_model=ContactFormMessageSchema)
 def submit_contact_form_message(message: ContactFormMessageSchema):
@@ -42,12 +38,9 @@ def submit_contact_form_message(message: ContactFormMessageSchema):
     save_message(model)
     return message
 
-
-
 # Delete individual method from db
-# TODO: protect route:    token: str = Depends(oauth2_scheme)
 @contact_form_router.delete("/message", response_model=dict) #response_model is just a dict (json response i think...?) #I don't need to import (from fastapi.responses import JSONResponse) right ??
-def delete_contact_form_messages(email: str, subject: str):
+def delete_contact_form_messages(email: str, subject: str, token: str = Depends(oauth2_scheme)):
     success = delete_message(email, subject)
     if not success:
         raise HTTPException(status_code=404, detail="Message not found. Nothing deleted.")
