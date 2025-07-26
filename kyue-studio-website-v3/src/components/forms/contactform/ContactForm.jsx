@@ -55,7 +55,7 @@ const ContactForm = () => {
       dataToSend.append('lastName', formData.lastName);
       dataToSend.append('email', formData.email);
       dataToSend.append('subject', formData.subject);
-      dataToSend.append('tags', selectedTag); // TODO: FIX: right ???
+      dataToSend.append('tags', [selectedTag]); // TODO: FIX: right ???
       dataToSend.append('message', formData.message);
 
       setFormData(dataToSend); // send data to backend
@@ -107,7 +107,21 @@ const ContactForm = () => {
           <input type="email" id="email" name="email" />
         </div>
 
-
+        {/* insert tags drop down here 
+        // use result from fetchTags() method above
+        # TODO: Have your frontend send values like "Bug Report", "Feedback" (from a dropdown), so it matches your enum values.
+        */}
+        {/* <div className="form-group">
+          <label htmlFor="tags">Tags</label>
+          <select id="tags" multiple value={selectedTag} onChange={handleSelectTag}>
+            <option value="">-- Please choose an option --</option>
+            {tags.map((tag) => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
+        </div> */}
 
         <div className="form-group">
           <label htmlFor="subject">Subject</label>
