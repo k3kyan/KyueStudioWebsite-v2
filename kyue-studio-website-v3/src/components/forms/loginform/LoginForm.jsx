@@ -13,9 +13,12 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [loginMessage, setLoginMessage] = useState('');
     const [redirectToHome, setRedirectToHome] = useState(false); //redirect to homepage if successful login
+    
+    
+    const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token')); // Logout functionality // state variable to track login status:
 
     // want async/await so that it finishes checking login and accessing api before continuing code. Otherwise, may have errors and might access things wrong or something
-    const signIn = async (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault(); // EXPLAIN: we dont want the default functionality of the form to happen. we want to do our own thing.
         setLoginMessage('Logging in...');
         
@@ -37,6 +40,7 @@ const LoginForm = () => {
                 localStorage.setItem('token', response.data.access_token); // TODO: FIX: store token in local storage
                 setLoginMessage('Login successful!');
                 setRedirectToHome(true);
+                setIsLoggedIn(true); //logout functionality
                 return response.json();
             }
             // throw response; // needed ???
@@ -53,8 +57,20 @@ const LoginForm = () => {
     
 
 
+    // logout function
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        setLoginMessage('Logged out');
+    };
+
+
+
+
+
+    // UI component
   return (
-    <form onSubmit={signIn} style={{ maxWidth: '300px', margin: 'auto' }}>
+    <form onSubmit={handleSignIn} style={{ maxWidth: '300px', margin: 'auto' }}>
         <h3>Login Form</h3>
 
         <label>
@@ -82,6 +98,17 @@ const LoginForm = () => {
         <button type="submit">Log In</button>
 
         {loginMessage && <p>{loginMessage}</p>}
+
+
+        {/* // logout functionality + if-true Conditional Rendering if you're logged in or not */}
+        {isLoggedIn && (
+            <div style={{ marginTop: '1rem' }}>
+                <button onClick={handleLogout}>Log Out</button>
+            </div>
+        )}
+        {/* if-else Conditional Rendering */}
+        {isLoggedIn ? <div>Logged in!</div> : <div>not logged in</div>}
+
     </form>
   )
 }
