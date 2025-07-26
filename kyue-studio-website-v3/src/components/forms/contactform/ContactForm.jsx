@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import './ContactForm.css'
+import api from '../../../api/fastapi';  // connects us to backend with axios
+import { useAuth } from '../../../../GlobalContext'; //context to let us know if we are logged in or not, and conditionally render
 
 // TODO: to connect this to an submission backend (ex: AWS SNS), I will need "onSubmit" logic
 // TODO: Connect this form to an email or database backend
 
 const ContactForm = () => {
+  // State variables
+
+  // API Calls
+
+
+  // Rendering UI
   return (
     <section className="contact-form-container">
       <form className="contact-form">
