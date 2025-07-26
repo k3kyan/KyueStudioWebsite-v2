@@ -7,7 +7,6 @@ const Login = () => {
     <div>
         <PageTitle title="Login" />
         <LoginForm />
-        TEMP_: Login form
     </div>
   )
 }

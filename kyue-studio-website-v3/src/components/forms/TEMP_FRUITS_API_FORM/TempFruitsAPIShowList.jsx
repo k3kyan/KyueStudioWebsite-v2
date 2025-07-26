@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 // import AddFruitForm from './AddFruitForm';
 import AddFruitForm from './TempFruitsAPIForm';
 import api from '../../../api/fastapi';  // IMPORTANT: THIS IS HOW WE CONNECT THE FRONTEND TO THE BACKEND !!!!! WOWOW YAYAYA 
+import { useAuth } from '../../../../GlobalContext';
 
 const FruitList = () => {
   const [fruits, setFruits] = useState([]);
+  const { isLoggedIn } = useAuth(); // getting context from GlobalContext.js, tells us whether we are logged in or not
 
   // IMPORTANT: CALLS TO ENDPOINT FOR GET /FRUITS (CALLS TO BACKEND TO GET LIST OF FRUITS
   const fetchFruits = async () => {
@@ -17,9 +19,13 @@ const FruitList = () => {
   };
 
   // IMPORTANT: ENDPOINT TO POST /FRUITS (ADDS FRUIT TO DATABASE IN BACKEND)
+  // IMPORTANT: since this is a protect route, for the api.post parameters, we need to add the token!!! 
   const addFruit = async (fruitName) => {
     try {
-      await api.post('/fruits', { name: fruitName });
+      await api.post('/fruits', 
+        { name: fruitName },
+        // { headers: { Authorization: `Bearer ${token}` } } // dont need this line since we set up axios to include the token in every request
+      );
       fetchFruits();  // Refresh the list after adding a fruit
     } catch (error) {
       console.error("Error adding fruit", error);
@@ -47,7 +53,9 @@ const FruitList = () => {
           <li key={index}>{fruit.name}</li>
         ))}
       </ul>
-      <AddFruitForm addFruit={addFruit} />
+      {isLoggedIn && ( // REPLACE WITH VARIABLE BOOL ON WHETHER UR LOGGED IN OR NOT
+        <AddFruitForm addFruit={addFruit} />
+      )}
     </div>
   );
 };
