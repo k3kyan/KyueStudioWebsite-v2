@@ -25,15 +25,18 @@ class FruitModel:
         self.name = name
         
     # TODO: EXPLAIN: ???
+    # Creates a FruitModel from a FruitSchema
     @classmethod
     def from_schema(cls, fruit: FruitSchema):
         return cls(fruit.name)
     
+    # Converts the model into a Python dict (for JSON/db/etc)
     def to_dict(self):
         return {
             "name": self.name
         }
         
+    # Converts the model back into a FruitSchema
     def to_schema(self): # maybe should be named model_to_schema
         return FruitSchema(name=self.name)
     
