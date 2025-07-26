@@ -30,7 +30,10 @@ function App() {
             
             <Route path="/login" element={<Login />} />
             {/* Protected Routes/Pages */}
-            {/* <Route path="/admin" element={<Login />} /> */}
+            {/* TODO: */}
+            {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+            {/* <Route path="/admin/messages" element={<AdminMessages />} /> */}
+            {/* <Route path="/admin/orders" element={<AdminOrders />} /> */}
           </Routes>
         </main>
 
