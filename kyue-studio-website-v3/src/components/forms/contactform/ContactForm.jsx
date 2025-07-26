@@ -49,19 +49,30 @@ const ContactForm = () => {
     setMessageSendingProgress('Sending...');
     
     try{
+      // This method worked in LoginForm.jsx, idk why its not working here. prob bc of tags tbh. 
       // format data into a variable to send to backend
-      const dataToSend = new FormData();
-      dataToSend.append('firstName', formData.firstName);
-      dataToSend.append('lastName', formData.lastName);
-      dataToSend.append('email', formData.email);
-      dataToSend.append('subject', formData.subject);
-      dataToSend.append('tags', [selectedTag]); // TODO: FIX: right ???
-      dataToSend.append('message', formData.message);
+      // const addDataToFormData = new FormData();
+      // dataToSend.append('firstName', formData.firstName);
+      // dataToSend.append('lastName', formData.lastName);
+      // dataToSend.append('email', formData.email);
+      // dataToSend.append('subject', formData.subject);
+      // dataToSend.append('tags', [selectedTag]); // TODO: FIX: right ???
+      // dataToSend.append('message', formData.message);
+      // setFormData(addDataToFormData);
 
-      setFormData(dataToSend); // send data to backend
-
+      // grabbed format from SwaggerUI
+      const dataToSend = {
+        "firstName": formData.firstName,
+        "lastName": formData.lastName,
+        "email": formData.email,
+        "subject": formData.subject,
+        "tags": [
+          "Collaboration"
+        ],
+        "message": formData.message
+      }
       // TODO: RESEARCH: is there a way i can add the endpoint prefix in one place instead of each call here or nah?
-      const response = await api.post("/contact-form/message", formData); // TODO: FIX: IS THIS CORRECT?? does it match up with the backend ????
+      const response = await api.post("/contact-form/message", dataToSend); // TODO: FIX: IS THIS CORRECT?? does it match up with the backend ????
       if (response.status === 200) {
         setMessageSendingProgress('Message sent successfully!');
         return response.json(); // TODO: RESEARCH: is this return response needed?
@@ -93,18 +104,18 @@ const ContactForm = () => {
         <div className="name-fields">
           <div className="form-group">
             <label htmlFor="firstName">First name</label>
-            <input type="text" id="firstName" name="firstName" />
+            <input type="text" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} required id="firstName" name="firstName" />
           </div>
           <div className="form-group">
             <label htmlFor="lastName">Last name</label>
-            <input type="text" id="lastName" name="lastName" />
+            <input value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} required type="text" id="lastName" name="lastName" />
           </div>
         </div>
 
         {/* DONE: add email validation // oh i think react automatically does it? */}
         <div className="form-group">
           <label htmlFor="email">Email address</label>
-          <input type="email" id="email" name="email" />
+          <input value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required type="email" id="email" name="email" />
         </div>
 
         {/* insert tags drop down here 
@@ -125,12 +136,12 @@ const ContactForm = () => {
 
         <div className="form-group">
           <label htmlFor="subject">Subject</label>
-          <input type="text" id="subject" name="subject" />
+          <input value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} required type="text" id="subject" name="subject" />
         </div>
 
         <div className="form-group">
           <label htmlFor="message">Message</label>
-          <textarea id="message" name="message" rows="4"></textarea>
+          <textarea value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} required id="message" name="message" rows="4"></textarea>
         </div>
 
         <button type="submit" className="send-button">Send message</button>
