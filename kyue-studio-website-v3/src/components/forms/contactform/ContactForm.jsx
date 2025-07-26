@@ -24,6 +24,10 @@ const ContactForm = () => {
           <input type="email" id="email" name="email" />
         </div>
 
+        {/* insert tags drop down here 
+        # TODO: Have your frontend send values like "Bug Report", "Feedback" (from a dropdown), so it matches your enum values.
+        */}
+
         <div className="form-group">
           <label htmlFor="subject">Subject</label>
           <input type="text" id="subject" name="subject" />
