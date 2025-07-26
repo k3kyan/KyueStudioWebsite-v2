@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import List
 from routes.fruit_routes import fruit_router #TEMP for testing
 # from routes.login_routes import login_router
-from routes import fruit_routes, login_routes, authentication_routes #this way can import multiple routes in one line, less bloating
+from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
 
 # The FastAPI application/instance
@@ -41,6 +41,7 @@ app.add_middleware(
 app.include_router(fruit_router) #TEMP
 app.include_router(login_routes.login_router)
 app.include_router(authentication_routes.authentication_router) #Something went wrong when i added this before, but now i restarted app and its working now so idk, but if theres a problem in the future maybe check this ...?
+app.include_router(contact_form_messages_routes.contact_form_router)
 
 
 # runs the uvicorn server
