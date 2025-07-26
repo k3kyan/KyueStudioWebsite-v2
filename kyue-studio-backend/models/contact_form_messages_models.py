@@ -15,7 +15,7 @@ class ContactFormMessageModel:
         self.lastName = lastName
         self.email = email
         self.subject = subject
-        self.tags = tags  # should be a list of string values like ["Bug Report", "Collaboration"]
+        self.tags = tags  # should be a list of string values like ["Bug Report", "Collaboration"] #TODO: actually I only need 1 tag. The list of tags was for listing the tags for the dropdown. each message entity should just have ONE SINGLE tag!!!!! man... sislkdfjs
         self.message = message
         
     # Method to create a Model from a Schema

@@ -18,13 +18,13 @@ const ContactForm = () => {
     tags: [],
     message: '',
   });
-  const [messageSendingProgress, setMessageSendingProgress] = useState('');
+  const [sendingProgressMessage, setSendingProgressMessage] = useState('');
   const [sentMessage, setSentMessage] = useState(false);
   const [tags, setTags] = useState([]);  // holds the list of tags received from backend // what you can pick
   const [selectedTag, setSelectedTag] = useState([]); // holds the selected tag that the user selects // what you picked
 
   // TODO: DELETE: i think i can delete these? I dont need any conditional rendering for auth stuff and i think the other variable is duplicate logic so ...?
-  const [sendingProgressMessage, setSendingProgressMessage] = useState('');
+  const [messageSendingProgress, setMessageSendingProgress] = useState('');
   const { isLoggedIn } = useAuth();
 
   // ---------------- API Calls ----------------
@@ -46,7 +46,7 @@ const ContactForm = () => {
   // when form is submitted
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessageSendingProgress('Sending...');
+    setSendingProgressMessage('Sending...');
     
     try{
       // This method worked in LoginForm.jsx, idk why its not working here. prob bc of tags tbh. 
@@ -74,13 +74,14 @@ const ContactForm = () => {
       // TODO: RESEARCH: is there a way i can add the endpoint prefix in one place instead of each call here or nah?
       const response = await api.post("/contact-form/message", dataToSend); // TODO: FIX: IS THIS CORRECT?? does it match up with the backend ????
       if (response.status === 200) {
-        setMessageSendingProgress('Message sent successfully!');
+        setSendingProgressMessage('Message sent successfully!');
+        setSentMessage(true);
         return response.json(); // TODO: RESEARCH: is this return response needed?
       }
       // throw response; // needed ???
     } catch (error) {
       console.error("Error sending message", error);
-      setMessageSendingProgress('Error sending message');
+      setSendingProgressMessage('Error sending message');
     }
   }
 
@@ -118,13 +119,15 @@ const ContactForm = () => {
           <input value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required type="email" id="email" name="email" />
         </div>
 
+        {/* TODO: make this whole field in the model and schema etc into a string.... bruh. Only the Tags list is a string, not the entity's tag field itself */}
+        {/* TODO: OK SO tbh i want to actually change Tags to just select 1 tag, idk why i wanted to select multiple in the first place ???? i dont rly need to ????? So I'm going to change that later. // Will have to go into the backend, schemas, models, code, all that. Man.  */}
         {/* insert tags drop down here 
         // use result from fetchTags() method above
         # TODO: Have your frontend send values like "Bug Report", "Feedback" (from a dropdown), so it matches your enum values.
         */}
         {/* <div className="form-group">
           <label htmlFor="tags">Tags</label>
-          <select id="tags" multiple value={selectedTag} onChange={handleSelectTag}>
+          <select id="tags" value={selectedTag} onChange={handleSelectTag}>
             <option value="">-- Please choose an option --</option>
             {tags.map((tag) => (
               <option key={tag} value={tag}>
@@ -153,7 +156,7 @@ const ContactForm = () => {
       </div>
 
       {sentMessage ? <div>Message Sent! I'll contact you when I see it!! yahoo</div> : <div>Say something to me!</div>}
-      {messageSendingProgress && <p>{messageSendingProgress}</p>}
+      {/* {sentMessage && <p>{sendingProgressMessage}</p>} */}
 
     </section>
   )
