@@ -1,0 +1,24 @@
+Schemas: 
+- Domain or database structures (your internal data formats)
+- often matching tables, DynamoDB items, or stored JSON structure.
+
+i.e.: PYDANTIC MODELS
+- input/output shape
+- API response/request body
+- validation
+
+- DOESNT CARE ABOUT PERSISTANCE FORMAT!!! (E.g. how its saved in DynamoDB, SQL, JSON, etc)
+- Handles how data is used/formatted in the business logic, rather than storage or persistance/saving/writing/reading/etc
+- cleaner to read i think?
+
+usually API related, aka Pydantic models
+Defines what the API expects as input (aka the request body)
+Defines what the API returns as output (aka the response model)
+Used for validation, serialization, and documentation
+No DB relationships
+API Layer
+
+
+
+
+basic summary: ------- PYDANTIC MODELS -------

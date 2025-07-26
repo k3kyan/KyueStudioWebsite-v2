@@ -1,0 +1,16 @@
+Routes:
+- Handles endpoint logic
+
+Example use of endpoint methods 
+1. take in API Pydantic Schema as a request body, 
+2. which we then convert to JSON Models using the methods in the same json Models Module (i.e. to_schema() etc) #MODELS MODULE METHODS
+3. Then we use the methods in the Service module to save that json model to the db (i.e. save_fruits() ) #SERVICE MODULE METHODS
+
+Separation of Concerns:
+- Routes/controllers:   handle HTTP logic (requests, responses, status codes).
+- Services:             handle business rules, validation, and data persistence.
+- Schemas/models:       define the shape of the data — not how it's stored or fetched.
+
+
+separation of concerns allows easier read, debug, and test
+You can mock the service layer in unit tests for routes.

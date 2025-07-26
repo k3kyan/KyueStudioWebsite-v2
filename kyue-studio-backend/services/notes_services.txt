@@ -1,0 +1,25 @@
+Service module
+- database INTERACTIONS layer/module
+- ex: crud, read write load save etc
+- ex: i/o, json, db, etc
+- contains for ex: load_fruits, save_fruits, etc
+
+
+TODO: RESEARCH: Does the service module also interact with schemas? or is that conversion from schemas to models done elsewhere?
+-- done in routes maybe??
+
+- Handles writing to DB (ex: uses DB formatting from Models (which already took care of converting pydantic Schema format to DB Model (json) format)
+Ex: loads data from file/db, saves data to file/db
+
+
+
+
+
+The service layer (also called the "business logic" or "application logic" layer) should be the 
+ONLY 
+part of your app that
+DIRECTLY
+interacts with the database or external storage !!!!!!!!!!!!
+
+
+ONLY the service layer should touch the database
