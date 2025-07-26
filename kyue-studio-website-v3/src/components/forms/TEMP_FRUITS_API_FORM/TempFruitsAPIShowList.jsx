@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 // import AddFruitForm from './AddFruitForm';
 import AddFruitForm from './TempFruitsAPIForm';
 import api from '../../../api/fastapi';  // IMPORTANT: THIS IS HOW WE CONNECT THE FRONTEND TO THE BACKEND !!!!! WOWOW YAYAYA 
+import { useAuth } from '../../../../GlobalContext';
 
 const FruitList = () => {
   const [fruits, setFruits] = useState([]);
+  const { isLoggedIn } = useAuth(); // getting context from GlobalContext.js, tells us whether we are logged in or not
 
   // IMPORTANT: CALLS TO ENDPOINT FOR GET /FRUITS (CALLS TO BACKEND TO GET LIST OF FRUITS
   const fetchFruits = async () => {
@@ -51,7 +53,7 @@ const FruitList = () => {
           <li key={index}>{fruit.name}</li>
         ))}
       </ul>
-      {true && ( // REPLACE WITH VARIABLE BOOL ON WHETHER UR LOGGED IN OR NOT
+      {isLoggedIn && ( // REPLACE WITH VARIABLE BOOL ON WHETHER UR LOGGED IN OR NOT
         <AddFruitForm addFruit={addFruit} />
       )}
     </div>

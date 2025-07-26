@@ -4,6 +4,7 @@ import './LoginForm.css'
 // from '../../../../../../kyue-studio-backend/routes' #no i dont need to do this import bc its already in the "api" import. You should never need to touch backend like that from the front end. axios's api object will handle all of that.
 import api from '../../../api/fastapi';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../../../GlobalContext'; // correct route for import?
 
 const LoginForm = () => {
 
@@ -15,7 +16,8 @@ const LoginForm = () => {
     const [redirectToHome, setRedirectToHome] = useState(false); //redirect to homepage if successful login
     
     
-    const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token')); // Logout functionality // state variable to track login status:
+    // Can Delete: Implemented in GlobalContext.js: const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token')); // Logout functionality // state variable to track login status:
+    const { isLoggedIn, login, logout } = useAuth(); // getting context from GlobalContext.js
 
     // want async/await so that it finishes checking login and accessing api before continuing code. Otherwise, may have errors and might access things wrong or something
     const handleSignIn = async (e) => {
@@ -29,18 +31,19 @@ const LoginForm = () => {
             formData.append('username', username); // from username state variable
             formData.append('password', password); // from password state variable
 
-            const requestOptions = {
-                method: 'POST',
-                body: formData,
-            };
+            // DELETE: useless i think , from Catalin Stefan's tutorial
+            // const requestOptions = {
+            //     method: 'POST',
+            //     body: formData,
+            // };
 
-            const response = await api.post('/token', formData); // no await ? // do i use requestOptions or formData ???
-            // api.post('/token', {requestOptions}); // not sure which is right? do i need the {} ??
-            if (response.status === 200) { // response.status === 200 better ??
-                localStorage.setItem('token', response.data.access_token); // TODO: FIX: store token in local storage
+            const response = await api.post('/token', formData);
+            if (response.status === 200) {
+                login(response.data.access_token);  // call the context login function // saves token to localStorage
+                // isLoggedIn(true); // DELETE: don't need this bc this is handled inside the login() method in GlobalContext useAuth hook
                 setLoginMessage('Login successful!');
                 setRedirectToHome(true);
-                setIsLoggedIn(true); //logout functionality
+                //DELETE: setIsLoggedIn(true); //logout functionality
                 return response.json();
             }
             // throw response; // needed ???
@@ -59,8 +62,7 @@ const LoginForm = () => {
 
     // logout function
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
+        logout(); // call the context logout function
         setLoginMessage('Logged out');
     };
 
