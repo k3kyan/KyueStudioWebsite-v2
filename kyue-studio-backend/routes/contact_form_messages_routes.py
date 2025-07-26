@@ -26,6 +26,7 @@ contact_form_router = APIRouter(
 def get_contact_form_tags_enums():
     return load_tags()
 
+# PROTECTED ROUTE
 # Get list of messages
 @contact_form_router.get("/messages")
 def get_contact_form_messages(token: str = Depends(oauth2_scheme)):
@@ -38,6 +39,8 @@ def submit_contact_form_message(message: ContactFormMessageSchema):
     save_message(model)
     return message
 
+
+# PROTECTED ROUTE
 # Delete individual method from db
 @contact_form_router.delete("/message", response_model=dict) #response_model is just a dict (json response i think...?) #I don't need to import (from fastapi.responses import JSONResponse) right ??
 def delete_contact_form_messages(email: str, subject: str, token: str = Depends(oauth2_scheme)):
