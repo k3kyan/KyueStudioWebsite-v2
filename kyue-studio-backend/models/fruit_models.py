@@ -34,7 +34,7 @@ class FruitModel:
             "name": self.name
         }
         
-    def to_schema(self):
+    def to_schema(self): # maybe should be named model_to_schema
         return FruitSchema(name=self.name)
     
     # The methods are purely conversions of models to/from schema, not actual persistance or read/write etc
