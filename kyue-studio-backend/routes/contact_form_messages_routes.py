@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagEnum
 from services.contact_form_messages_service import load_tags, load_messages, save_message, delete_message
 from typing import List
@@ -45,8 +45,10 @@ def submit_contact_form_message(message: ContactFormMessageSchema):
 
 
 # Delete individual method from db
-# protect route:    token: str = Depends(oauth2_scheme)
-# @contact_form_router.delete("/message")
-# def delete_contact_form_messages():
-# delete_message()
-#     return
+# TODO: protect route:    token: str = Depends(oauth2_scheme)
+@contact_form_router.delete("/message", response_model=dict) #response_model is just a dict (json response i think...?) #I don't need to import (from fastapi.responses import JSONResponse) right ??
+def delete_contact_form_messages(email: str, subject: str):
+    success = delete_message(email, subject)
+    if not success:
+        raise HTTPException(status_code=404, detail="Message not found. Nothing deleted.")
+    return {"message": "Message deleted successfully."} # TODO: FIX: is this response ok?

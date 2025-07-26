@@ -38,8 +38,35 @@ def save_message(message: ContactFormMessageModel) -> None:
             json.dump({"contact_form_messages_list": messages}, f, indent=2)
 
 # - delete messages
-# @contact_form_router.delete("/messages")
-# def delete_contact_form_messages():
-#     return
-def delete_message():
-    return {"TODO"}
+# TEMP: this is super temp since json files cant actually delete individual entries, since they're just text files. 
+def delete_message(email: str, subject: str): #-> bool ???
+    # TEMP int to check if message was deleted (aka if length changed)
+    ogLength = 0 #TEMP
+    
+    # load all messages from JSON "database"
+    with open(TEMP_DB_PATH, "r") as f:
+        #load existing messages
+        existing_data = json.load(f)
+        messages = existing_data.get("contact_form_messages_list", [])
+        ogLength = len(messages) #TEMP
+    
+    # remove message from json list
+    # identify message to delete (TODO: maybe i should've included a generated id...? ex: in case i have duplicates of a message but still want to keep only one copy, etc)
+    # ID for now: email + subject 
+    # TEMP: i have to go thru the whole list to find the one i want to delete, then exclude it from my new message list, and then overwrite the JSON file with the new message list
+    #       since json file can't delete individual entries
+    #       even in the save_message I still have to get the list, add to list, and then overwrite the whole file with the new list
+    # TEMP: So basically I have to filter out the messages instead of finding the exact entry, for now
+    updated_message_list_excluding_deleted = [
+        msg for msg in messages if not (msg["email"] == email and msg["subject"] == subject) # filters out (removes) any message
+    ]
+    
+    # save updated list
+    # TEMP: the way im implementing this is overwriting json file with my new message list
+    with open(TEMP_DB_PATH, "w") as f:
+        json.dump({"contact_form_messages_list": updated_message_list_excluding_deleted}, f, indent=2)
+    
+    # True = message successfully deleted, False = message not found and not deleted
+    if ogLength != len(updated_message_list_excluding_deleted):
+        return True
+    return False
