@@ -1,10 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List
 from enum import Enum
-# TODO: enforce valid email format in, use
-# from pydantic import EmailStr 
-# then in the constructor, change email: EmailStr (to enforce email format)
-# (do this in one commit for clarity)
 
 # Enums list for the Tags dropdown. Edit to add/remove tags as needed. 
 # TODO: Have your frontend send values like "Bug Report", "Feedback" (from a dropdown), so it matches your enum values.
@@ -24,7 +20,7 @@ class TagEnum(str, Enum):
 class ContactFormMessageSchema(BaseModel):
     firstName: str
     lastName: str
-    email: str
+    email: str #TODO: Change to EmailStr later... the installation was messing me up
     subject: str
     tags: List[TagEnum]
     message: str
