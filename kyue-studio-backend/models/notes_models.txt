@@ -1,0 +1,29 @@
+Models:
+- domain object logic 
+- NOT I/O
+- contains conversion methods (??) like converting model to schema, converting model from schema, etc (????)
+- contains business logic methods like from_schema, to_json (???? idk if this is right)
+
+
+
+Kelly Thoughts (may or may not be correct):
+- Yes, in my project, the “model” can refer to a JSON format. (???)
+- So the model would be what takes care of the logic of converting the Pydantic schema model 
+  into a format that can be saved to any database, such as SQLAlchemy or DynamoDB or a simple JSON file
+- represents how data is stored (in a db, file, etc) 
+  // can be a sqlalchemy model, custom class for dynamodb, a wrapper around json storage logic, etc
+- HANDLES CONVERSION TO/FROM SCHEMA and db-specific quirks!!!!!!!!
+- Meaning HAS METHODS TO CONVERT PYDANTIC SCHEMA TO/FROM DB DATA FORMAT!!!!!!!!!
+
+- So aka the methods for converting Schema<->Model are done HERE !!!!
+does NOT handle persisting data to files here. That is service layer
+ok i’ve realized that the methods in Model are NOT logic methods, or saving/persisting data at all. THE METHODS INSIDE the model module ARE PURELY CONVERSION BETWEEN SCHEMA AND MODEL!!!!!!!!
+between pydantic and json !!!!!!! NO ACTUAL LOGIC, JUST CONVERSIONS!!!
+
+
+
+Represents a TABLE in your database
+Defines how data is stored
+Used for saving data to DB
+Can define foreign keys, how tables are connected, etc 
+Database (like SQLAlchemy)
