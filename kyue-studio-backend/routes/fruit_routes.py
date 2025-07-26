@@ -17,7 +17,7 @@ from services.fruit_service import load_temp_db, save_fruit_db
 fruit_router = APIRouter(
     # TODO: customize these fields later
     # prefix="/fruits",
-    # tags=["fruits"],
+    tags=["fruits"]
     # responses={404: {"description": "Not found"}}
 )
 

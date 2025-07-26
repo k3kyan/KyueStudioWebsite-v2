@@ -22,17 +22,20 @@ def load_messages() -> list[ContactFormMessageModel]: #-> list[ContactFormMessag
         # return [ContactFormMessageModel(**message).to_schema() for message in data["messages"]] 
         # ^ TODO: RESEARCH: could add .to_schema() but ig its better practice to just return the model from the service layer, and then convert the model to schema in the route layer...????
 
-
-
-
 # - submit new message in contact form
-# @contact_form_router.post("/messages")
-# def submit_contact_form_message(contact_form_message: ContactFormMessage):
-#     return
-def save_message(contact_form_message: ContactFormMessageModel):
-    # with open(TEMP_DB_PATH, "w") as f:
-    #     json.dump({"contact_form_messages_list": [contact_form_message.to_dict() for fruit in contact_form_message]}, f, indent=2)
-    return {"TODO"}
+# TEMP: APPENDS message to the json file. my fruits_service.py saves the entire list again, which is not very efficient, and def not what i would do when i connect with dynamoDB. 
+def save_message(message: ContactFormMessageModel) -> None:
+    with open(TEMP_DB_PATH, "r") as f:
+        #load existing messages
+        existing_data = json.load(f)
+        messages = existing_data.get("contact_form_messages_list", [])
+        
+        #append new message to json file (since im not using an actual DB)
+        messages.append(message.to_dict())
+        
+        # save updated list
+        with open(TEMP_DB_PATH, "w") as f:
+            json.dump({"contact_form_messages_list": messages}, f, indent=2)
 
 # - delete messages
 # @contact_form_router.delete("/messages")
