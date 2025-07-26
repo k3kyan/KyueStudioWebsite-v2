@@ -17,7 +17,7 @@ class TagEnum(str, Enum):
     comments = "Comments on My Work"
     yapping = "Yapping & Other"
 
-class ContactFormMessage(BaseModel):
+class ContactFormMessageSchema(BaseModel):
     firstName: str
     lastName: str
     email: str

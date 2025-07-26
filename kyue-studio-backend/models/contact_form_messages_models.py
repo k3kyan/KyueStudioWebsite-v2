@@ -1,7 +1,8 @@
-from schemas.contact_form_messages_schemas import ContactFormMessage, TagEnum
+from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagEnum
 from typing import List
+# from models.contact_form_messages_models import ContactFormMessageModel
 
-class ContactFormMessage:
+class ContactFormMessageModel:
     def __init__(
         self,
         firstName: str,
@@ -32,8 +33,9 @@ class ContactFormMessage:
         
         
     # Method to create a Model from a Schema
+    # "from_schema()" is more standard naming convention for fastapi here, but i find it confusing for now, may change later
     @classmethod
-    def to_model(cls, schema: ContactFormMessage):
+    def to_model(cls, schema: ContactFormMessageSchema):
         return cls(
             firstName=schema.firstName,
             lastName=schema.lastName,
@@ -46,7 +48,7 @@ class ContactFormMessage:
     
     # Method to create a Schema from a Model
     def to_schema(self):
-        return ContactFormMessage(
+        return ContactFormMessageModel(
             firstName=self.firstName,
             lastName=self.lastName,
             email=self.email,

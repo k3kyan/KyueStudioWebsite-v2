@@ -1,5 +1,7 @@
 from fastapi import APIRouter
-from schemas.contact_form_messages_schemas import ContactFormMessage, TagEnum
+from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagEnum
+from services.contact_form_messages_service import load_tags
+from typing import List
 
 contact_form_router = APIRouter(
     prefix="/contact-form",
@@ -14,10 +16,11 @@ contact_form_router = APIRouter(
 # - submit new message in contact form
 # - delete messages
 
-# @contact_form_router.get("/tags")
-# def get_contact_form_tags_enums():
-#     return [tag.value for tag in TagEnum]
+@contact_form_router.get("/tags", response_model=List[TagEnum]) # DON'T FORGET RESPONSE BODY!!!! Otherwise it wont show up in SwaggerUI
+def get_contact_form_tags_enums():
+    return load_tags()
 
+# probably protected
 # @contact_form_router.get("/messages-list")
 # def get_contact_form_messages():
 #     return
