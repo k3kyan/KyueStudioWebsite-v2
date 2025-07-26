@@ -13,6 +13,10 @@ Ex: loads data from file/db, saves data to file/db
 
 
 
+1. schemas: pydantic models only
+2. models: db model formatting + converting
+3. services: use models to interact with DB (read, write, find, update, etc)
+
 
 
 The service layer (also called the "business logic" or "application logic" layer) should be the 

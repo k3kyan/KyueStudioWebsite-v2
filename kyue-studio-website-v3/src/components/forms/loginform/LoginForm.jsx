@@ -1,27 +1,60 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+// import { useState } from 'react';
 import './LoginForm.css'
+// from '../../../../../../kyue-studio-backend/routes' #no i dont need to do this import bc its already in the "api" import. You should never need to touch backend like that from the front end. axios's api object will handle all of that.
+import api from '../../../api/fastapi';
+import { Navigate } from 'react-router-dom';
 
 const LoginForm = () => {
 
     // TODO: set up form backend submission functionality. connect to backend probably. service functions...?
     
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [loginMessage, setLoginMessage] = React.useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginMessage, setLoginMessage] = useState('');
+    const [redirectToHome, setRedirectToHome] = useState(false); //redirect to homepage if successful login
 
-    // const handleSubmit = async (e) => ????
-    const handleSubmit = (e) => {
-        e.preventDefault(); //TODO: expl
+    // want async/await so that it finishes checking login and accessing api before continuing code. Otherwise, may have errors and might access things wrong or something
+    const signIn = async (e) => {
+        e.preventDefault(); // EXPLAIN: we dont want the default functionality of the form to happen. we want to do our own thing.
         setLoginMessage('Logging in...');
-        // TODO: login success/fail logic 
+        
+
+        try {
+            // TODO: login success/fail logic 
+            const formData = new FormData();
+            formData.append('username', username); // from username state variable
+            formData.append('password', password); // from password state variable
+
+            const requestOptions = {
+                method: 'POST',
+                body: formData,
+            };
+
+            const response = await api.post('/token', formData); // no await ? // do i use requestOptions or formData ???
+            // api.post('/token', {requestOptions}); // not sure which is right? do i need the {} ??
+            if (response.status === 200) { // response.status === 200 better ??
+                localStorage.setItem('token', response.data.access_token); // TODO: FIX: store token in local storage
+                setLoginMessage('Login successful!');
+                setRedirectToHome(true);
+                return response.json();
+            }
+            // throw response; // needed ???
+        } catch (error) {
+            console.error('Error logging in', error);
+            setLoginMessage('Login failed. Please try again.');
+        }
+    };
+
+    if (redirectToHome) {
+        return <Navigate to="/" replace />; // TODO: RESEARCH: ?? what does the replace do ??
     }
 
     
 
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '300px', margin: 'auto' }}>
+    <form onSubmit={signIn} style={{ maxWidth: '300px', margin: 'auto' }}>
         <h3>Login Form</h3>
 
         <label>
