@@ -14,40 +14,40 @@ const AdminDashboard = () => {
     const [messageList, setMessageList] = useState([]);
     const { isLoggedIn } = useAuth();
 
-    const TEMP_message = {
-      "firstName": "Grr",
-      "lastName": "Growl",
-      "email": "growl@grr.com",
-      "subject": "grr",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "growl"
-    }
+    // const TEMP_message = {
+    //   "firstName": "Grr",
+    //   "lastName": "Growl",
+    //   "email": "growl@grr.com",
+    //   "subject": "grr",
+    //   "tags": [
+    //     "Collaboration"
+    //   ],
+    //   "message": "growl"
+    // }
 
-    const TEMP_messageList = [
-        {
-        "firstName": "Bob",
-        "lastName": "Microsoft",
-        "email": "bob@microsoft.com",
-        "subject": "Checkout is broken",
-        "tags": [
-            "Feedback",
-            "Bug Report"
-        ],
-        "message": "I can't checkout and pay for my order."
-        },
-        {
-        "firstName": "meow",
-        "lastName": "meow",
-        "email": "meow@grr.com",
-        "subject": "meow",
-        "tags": [
-            "Collaboration"
-        ],
-        "message": "meow"
-        }
-    ]
+    // const TEMP_messageList = [
+    //     {
+    //     "firstName": "Bob",
+    //     "lastName": "Microsoft",
+    //     "email": "bob@microsoft.com",
+    //     "subject": "Checkout is broken",
+    //     "tags": [
+    //         "Feedback",
+    //         "Bug Report"
+    //     ],
+    //     "message": "I can't checkout and pay for my order."
+    //     },
+    //     {
+    //     "firstName": "meow",
+    //     "lastName": "meow",
+    //     "email": "meow@grr.com",
+    //     "subject": "meow",
+    //     "tags": [
+    //         "Collaboration"
+    //     ],
+    //     "message": "meow"
+    //     }
+    // ]
     
 
     // ---------------- !!!!!!THIS PAGE IS A PROTECTED ROUTE!!!!!! ----------------
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
     // ---------------- useEffect() ----------------
     useEffect(() => {
         fetchMessages();
-    }, []); // will add deleteMessage to the []); triggers for refreshing later
+    }, [messageList]); // will add deleteMessage to the []); triggers for refreshing later // maybe just add messageList to the []); because its value will change when the delete endpoint is called within the MessageCard.jsx ??
 
     // ---------------- Rendering UI ----------------
     return (
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
             </div>
         ))} */}
 
-        <h1>SampleData: Single Message Components</h1>
+        {/* <h1>SampleData: Single Message Components</h1>
         <div class = "messages">
             <MessageCard message={TEMP_message} />
         </div>
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
         <h1>SampleData: Messages List</h1>
         <div class = "messages">
             <MessageCardColumnStack messageList={TEMP_messageList} />
-        </div>
+        </div> */}
 
         
         <h1>BackendJsonFileData: Messages List</h1>
