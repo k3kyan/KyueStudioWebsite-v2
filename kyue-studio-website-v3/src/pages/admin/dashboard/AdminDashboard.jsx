@@ -141,7 +141,7 @@ const AdminDashboard = () => {
         {/* <TempFruitsAPIForm />
         <TempFruitsAPIShowList />  */}
         {/* <AddFruitForm /> (needs parameter so thats why it didnt render correctly)*/} 
-        <FruitList /> 
+        {/* <FruitList />  */}
 
       
     </div>

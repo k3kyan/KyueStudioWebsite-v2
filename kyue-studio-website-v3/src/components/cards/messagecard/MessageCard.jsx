@@ -1,7 +1,9 @@
 import React from 'react'
 import './MessageCard.css'
+import api from '../../../api/fastapi';
 
 const MessageCard = ({message}) => {
+  // spreading the message object (could've also passed in {...message} but i prefer to do the dirty work at lower levels)
   const { firstName, lastName, email, subject, tags, message: body } = message;
 
   return (
