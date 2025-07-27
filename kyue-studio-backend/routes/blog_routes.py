@@ -23,7 +23,7 @@ blog_router = APIRouter(
     # will i convert the response body here to separate content and metadata schemas ????
     # DO I CREATE A SEPARATE SCHEMA FOR THIS SPECIFIC RESPONSE ???
 @blog_router.post("/post/create", response_model=dict) # WHAT IS THE response_model ?????? since i will have to add fields that arent in the BlogPostMetadataSchema schema like id ???
-def create_blog_post(metadata: BlogPostMetadataPOSTSchema, content: BlogPostContentSchema, token: str = Depends(oauth2_scheme)): # TODO: FIX: idk what im supposed to pass in too, this parameter is probably wrong sdlfkjs
+def create_blog_post(metadata: BlogPostMetadataPOSTSchema, token: str = Depends(oauth2_scheme)): # TODO: FIX: idk what im supposed to pass in too, this parameter is probably wrong sdlfkjs // removed "content: BlogPostContentSchema" parameter
     # should another parameter be: content_file: UploadFile = File(...) ?????
         # jk i dont need UploadFile bc i'm not uploading file ????? regarding the md content anyways, idk about the thumbnail later
     # title: str = Form(...), tags: List[str] = Form(...), summary: str = Form(...), thumbnail_url: Optional[str] = Form(...) ?????

@@ -15,19 +15,21 @@ class BlogPostMetadataSchema(BaseModel):
     date_updated: Optional[datetime] = None
     
 
-# TODO: USELESS??
-# content (aka markdown files) is stored in S3
-# a post's metadata is only loaded when the post page is loaded since its so much bigger than the post's metadata
-class BlogPostContentSchema(BaseModel):
-    id: uuid.UUID # TODO: IMPORTANT: MAKE SURE: THIS ID MATCHES THE METADATA'S ID !!!!
-    contentFileName: str # = Field(..., min_length=1) #TODO: add this constraint later so it wont cause issues in the future
+# # TODO: USELESS??
+# # content (aka markdown files) is stored in S3
+# # a post's metadata is only loaded when the post page is loaded since its so much bigger than the post's metadata
+# # ok actually i think this is useless because I am never sending this object type in a response
+# class BlogPostContentSchema(BaseModel):
+#     id: uuid.UUID # TODO: IMPORTANT: MAKE SURE: THIS ID MATCHES THE METADATA'S ID !!!!
+#     contentFileName: str # = Field(..., min_length=1) #TODO: add this constraint later so it wont cause issues in the future
     
     
-# TODO: USELESS??
-# full combined post, used in RESPONSE models !!!!
-class BlogPostSchema(BaseModel):
-    metadata: BlogPostMetadataSchema
-    content: BlogPostContentSchema
+# # TODO: USELESS??
+# # full combined post, used in RESPONSE models !!!!
+# class BlogPostSchema(BaseModel):
+#     id: uuid.UUID # TODO: IMPORTANT: MAKE SURE: THIS ID MATCHES THE METADATA'S ID !!!! // tho u can access the id too from metadata.id or content.id
+#     metadata: BlogPostMetadataSchema
+#     content: BlogPostContentSchema
     
     
     
@@ -44,6 +46,7 @@ class BlogPostMetadataPOSTSchema(BaseModel):
     tags: List[str] #no restrictions, i will make type in my own tags at the time of making post
     summary: str
     thumbnail_url: Optional[HttpUrl] = None
+    # would assign contentFileName not in the api, but inside the create_post() endpoint method i think
     
     
 # TODO: FIX: RESEARCH:

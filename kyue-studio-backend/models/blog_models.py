@@ -74,6 +74,7 @@ class BlogPostMetadataModel:
         
 # ------------------------------------------------- content model
 
+# TODO: do i even use this ??? 
 # model for saving content to S3
 class BlogPostContentModel:
     def __init__(self, id: uuid.UUID, contentFileName: str):
