@@ -131,9 +131,9 @@ const AdminDashboard = () => {
         
         <h1>BackendJsonFileData: Messages List</h1>
         <div class = "messages">
-            <pre>{JSON.stringify(messageList, null, 2)}</pre>
-            {/* <p>Total messages: {messageList.length}</p> */}
-            {/* <MessageCardColumnStack messageList={messageList} /> */}
+            {/* <pre>{JSON.stringify(messageList, null, 2)}</pre>
+            <p>Total messages: {messageList.length}</p> */}
+            <MessageCardColumnStack messageList={messageList} />
         </div>
 
         {isLoggedIn && ( 

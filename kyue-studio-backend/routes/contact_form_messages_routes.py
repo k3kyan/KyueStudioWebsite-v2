@@ -31,7 +31,9 @@ def get_contact_form_tags_enums():
 @contact_form_router.get("/messages")
 def get_contact_form_messages(): # TODO: undid the protected route for now dslkfs // token: str = Depends(oauth2_scheme)
     return load_messages() #TODO: RESEARCH: should i be making this into a schema ...? ContactFormMessageModle.to_schema() ?? but doesnt the ** already do that (inside the method)?
-
+    # when calling data from backend in the front end, MAKE SURE U ACTUALLY LOOK AT WHAT VALUE TYPE THEYRE RETURNING
+    # when calling my messages in front end, i just looked at the json response on swagger instead of remember what this method was ACTUALLY returning, which gave me a lot of errors and headache because i thought it was the wrong type than what it actually was
+    
 # Submit a message to db
 @contact_form_router.post("/message", response_model=ContactFormMessageSchema)
 def submit_contact_form_message(message: ContactFormMessageSchema):
