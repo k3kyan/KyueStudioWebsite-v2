@@ -31,10 +31,12 @@ function App() {
             
             <Route path="/login" element={<Login />} />
             {/* Protected Routes/Pages */}
-            {/* TODO: */}
+            {/* TODO: make a sidebar that appears when logged in for admin pages..?*/}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             {/* <Route path="/admin/messages" element={<AdminMessages />} /> */}
             {/* <Route path="/admin/orders" element={<AdminOrders />} /> */}
+            {/* <Route path="/admin/create-blog-post" element={<AdminCreateBlogPost />} /> */}
+            {/* <Route path="/admin/create-art-post" element={<AdminCreateArtPost />} /> */}
           </Routes>
         </main>
 
