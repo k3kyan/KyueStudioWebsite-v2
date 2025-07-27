@@ -24,27 +24,7 @@
     {
       "firstName": "1234",
       "lastName": "1234",
-      "email": "3242344@23424.com",
-      "subject": "125423",
-      "tags": [
-        "Job Opportunity"
-      ],
-      "message": "sdlfjs"
-    },
-    {
-      "firstName": "1234",
-      "lastName": "1234",
       "email": "as@23424.com",
-      "subject": "35",
-      "tags": [
-        "Job Opportunity"
-      ],
-      "message": "sdlfjs"
-    },
-    {
-      "firstName": "1234",
-      "lastName": "1234",
-      "email": "234g@23424.com",
       "subject": "35",
       "tags": [
         "Job Opportunity"
@@ -62,16 +42,6 @@
       "message": "sdlfjs"
     },
     {
-      "firstName": "string",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
       "firstName": "attempt2",
       "lastName": "string",
       "email": "string",
@@ -82,94 +52,6 @@
       "message": "string"
     },
     {
-      "firstName": "sdfssfsdf attempt 3",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "sdfssfsdf attempt 4",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "atttempt5",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "",
-      "lastName": "",
-      "email": "",
-      "subject": "",
-      "tags": [],
-      "message": ""
-    },
-    {
-      "firstName": "string",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "sdf",
-      "lastName": "string",
-      "email": "string",
-      "subject": "string",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "string"
-    },
-    {
-      "firstName": "sdf",
-      "lastName": "fds",
-      "email": "sdf@sdlkf.com",
-      "subject": "sdf",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "dsf"
-    },
-    {
       "firstName": "K",
       "lastName": "M",
       "email": "ksd@sdlkfj.com",
@@ -178,76 +60,6 @@
         "Collaboration"
       ],
       "message": "hello"
-    },
-    {
-      "firstName": "sdf",
-      "lastName": "sdf",
-      "email": "sdf@lsdkjf.com",
-      "subject": "sdf",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "sdf"
-    },
-    {
-      "firstName": "meow",
-      "lastName": "meow",
-      "email": "meow@mewo.ocm",
-      "subject": "meow",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "mewo"
-    },
-    {
-      "firstName": "meow",
-      "lastName": "meow",
-      "email": "meow@mewo.ocm",
-      "subject": "meow",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "mewo"
-    },
-    {
-      "firstName": "meow",
-      "lastName": "meow",
-      "email": "meow@mewosdf",
-      "subject": "meow",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "mewo"
-    },
-    {
-      "firstName": "meow",
-      "lastName": "meow",
-      "email": "meow@mewosdf",
-      "subject": "meow",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "mewo"
-    },
-    {
-      "firstName": "meow",
-      "lastName": "meow",
-      "email": "meow@mewosdf",
-      "subject": "meow",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "mewo"
-    },
-    {
-      "firstName": "sdf",
-      "lastName": "sdf",
-      "email": "sdf@dslkf.com",
-      "subject": "dsf",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "df"
     },
     {
       "firstName": "9:38pm",

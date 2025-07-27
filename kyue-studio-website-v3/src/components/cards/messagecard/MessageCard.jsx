@@ -2,19 +2,8 @@ import React from 'react'
 import './MessageCard.css'
 import api from '../../../api/fastapi';
 
-
-
-// TODO: ???????
-// 3. Update the parent component (later)
-// You'll also want to add a callback prop like onDelete so the parent (like MessageCardColumnStack) can re-fetch or update state once a message is deleted.
-
-
-
-
-
-
-
-const MessageCard = ({message}) => {
+// callback prop fetchMessages(formerly: onDelete) allows it to tell parent (MessageCardColumnStack) to re-fetch or update state once a message is deleted
+const MessageCard = ({message, fetchMessages}) => {
   // ---------------- State variables ----------------
   // spreading the message object (could've also passed in {...message} but i prefer to do the dirty work at lower levels)
   const { firstName, lastName, email, subject, tags, message: body } = message;
@@ -25,16 +14,24 @@ const MessageCard = ({message}) => {
   // Endpoint: Delete Message
   const handleDeleteMessage = async () => {
     try {
-      await api.delete('/contact-form/message', {
+      // hit delete endpoint to delete message from db
+      const response = await api.delete('/contact-form/message', {
         params: {
           email: email,
           subject: subject
         }
       });
+      console.log('Deleted:', response.data);
+
+      // tell parent to refresh and update state since database has changed
+      fetchMessages();
+      // if (onDelete) {
+      //   onDelete();
+      // }
     } catch (error) {
       console.error('Error deleting message:', error);
+      alert('Failed to delete message');
     }
-    // 
   }
 
   // ---------------- useEffect() ----------------

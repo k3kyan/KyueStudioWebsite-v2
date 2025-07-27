@@ -103,26 +103,11 @@ const AdminDashboard = () => {
         {/* TODO: fix LogOutButton component. doesn't work. */}
         {/* <LogOutButton /> */}
 
-        {/* TODO: message board (will later be separated into components somehow, so i can display it into a list and separate delete functions) */}
-        {/* mmap over the array and render UI elements for each message*/}
-        {/* {messageList.map((msg, index) => (
-            <div key={index} className="message">
-                <p><strong>Name:</strong> {msg.firstName} {msg.lastName}</p>
-                <p><strong>Email:</strong> {msg.email}</p>
-                <p><strong>Subject:</strong> {msg.subject}</p>
-                <p><strong>Tags:</strong> {msg.tags.join(', ')}</p>
-                <p><strong>Message:</strong> {msg.message}</p>
-                <hr />
-            </div>
-        ))} */}
-
         {/* <h1>SampleData: Single Message Components</h1>
         <div class = "messages">
             <MessageCard message={TEMP_message} />
         </div>
 
-
-            
         <h1>SampleData: Messages List</h1>
         <div class = "messages">
             <MessageCardColumnStack messageList={TEMP_messageList} />
@@ -133,7 +118,7 @@ const AdminDashboard = () => {
         <div class = "messages">
             {/* <pre>{JSON.stringify(messageList, null, 2)}</pre>
             <p>Total messages: {messageList.length}</p> */}
-            <MessageCardColumnStack messageList={messageList} />
+            <MessageCardColumnStack messageList={messageList} fetchMessages={fetchMessages} />
         </div>
 
         {isLoggedIn && ( 
