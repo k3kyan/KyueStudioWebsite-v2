@@ -5,6 +5,7 @@ import { useAuth } from '../../../../GlobalContext';
 import { Navigate } from 'react-router-dom';
 import MessageCard from '../../../components/cards/messagecard/MessageCard';
 import MessageCardColumnStack from '../../../components/cards/messagecard-columnstack/MessageCardColumnStack';
+import { Link } from 'react-router-dom';
 
 import AddFruitForm from '../../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIForm';
 import FruitList from '../../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIShowList';
@@ -102,6 +103,20 @@ const AdminDashboard = () => {
         TODO: render only if logged in // otherwise, redirect/navigate to homepage bc they shouldn't be accessing this URL
         {/* TODO: fix LogOutButton component. doesn't work. */}
         {/* <LogOutButton /> */}
+
+        <div>
+            <h2>Links to Admin stuff. Put into a sidebar later (will persist over whole Admin page)</h2>
+                <nav style={{ display: 'flex', gap: '1rem' }}>
+                    <Link to="/admin/dashboard">Dashboard</Link>
+                    <Link to="/admin/messages">Messages</Link>
+                    <Link to="/admin/orders">Orders</Link>
+                    <Link to="/admin/create-blog-post">Create Blog Post</Link>
+                    <Link to="/admin/create-art-post">Create Art Post</Link>
+                </nav>
+        </div>
+
+
+
 
         {/* <h1>SampleData: Single Message Components</h1>
         <div class = "messages">
