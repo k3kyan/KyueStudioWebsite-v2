@@ -29,7 +29,7 @@ def get_contact_form_tags_enums():
 # PROTECTED ROUTE
 # Get list of messages
 @contact_form_router.get("/messages")
-def get_contact_form_messages(token: str = Depends(oauth2_scheme)):
+def get_contact_form_messages(): # TODO: undid the protected route for now dslkfs // token: str = Depends(oauth2_scheme)
     return load_messages() #TODO: RESEARCH: should i be making this into a schema ...? ContactFormMessageModle.to_schema() ?? but doesnt the ** already do that (inside the method)?
 
 # Submit a message to db

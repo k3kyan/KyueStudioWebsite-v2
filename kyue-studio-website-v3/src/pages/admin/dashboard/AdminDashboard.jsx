@@ -63,7 +63,9 @@ const AdminDashboard = () => {
     const fetchMessages = async () => {
         try {
             const response = await api.get('/contact-form/messages');
-            setMessageList(response.data.messageList);
+            console.log(response.data.messageList);
+            // console.log(response);
+            setMessageList(response.data);
             
             // {/* Good for debugging and seeing what the structure of each msg looks like*/}
             // console.log(messageList); 
@@ -114,16 +116,24 @@ const AdminDashboard = () => {
             </div>
         ))} */}
 
-        <h1>Single Message Components</h1>
+        <h1>SampleData: Single Message Components</h1>
         <div class = "messages">
             <MessageCard message={TEMP_message} />
         </div>
 
 
             
-        <h1>Messages List</h1>
+        <h1>SampleData: Messages List</h1>
         <div class = "messages">
             <MessageCardColumnStack messageList={TEMP_messageList} />
+        </div>
+
+        
+        <h1>BackendJsonFileData: Messages List</h1>
+        <div class = "messages">
+            <pre>{JSON.stringify(messageList, null, 2)}</pre>
+            {/* <p>Total messages: {messageList.length}</p> */}
+            {/* <MessageCardColumnStack messageList={messageList} /> */}
         </div>
 
         {isLoggedIn && ( 
@@ -136,6 +146,7 @@ const AdminDashboard = () => {
 
 
 
+        {/* NOT WORKING ???? idk but i dont need this so i wont fix it now, since Contact Form is still sending data to backend successfully, but idk why its not working i didnt think i changed anything sdfkljsflksd */}
         {/* the Fruit stuff is here for fun and for testing lol, my first working crud implementation! yayy */}
         {/* TEMP: Just to show that backend is working. DELETE LATER!! */}
         {/* <TempFruitsAPIForm />
