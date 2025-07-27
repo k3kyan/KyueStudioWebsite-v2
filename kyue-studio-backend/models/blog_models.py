@@ -72,30 +72,30 @@ class BlogPostMetadataModel:
         }
         
         
-# ------------------------------------------------- content model
+# # ------------------------------------------------- content model
 
-# TODO: do i even use this ??? 
-# model for saving content to S3
-class BlogPostContentModel:
-    def __init__(self, id: uuid.UUID, contentFileName: str):
-        self.id = id
-        self.contentFileName = contentFileName
+# # TODO: do i even use this ??? 
+# # model for saving content to S3
+# class BlogPostContentModel:
+#     def __init__(self, id: uuid.UUID, contentFileName: str):
+#         self.id = id
+#         self.contentFileName = contentFileName
         
-    def to_dict(self):
-        return {
-            "id": str(self.id),  # IMPORTANT: convert UUID to string for JSON !!!
-            "contentFileName": self.contentFileName
-        }
+#     def to_dict(self):
+#         return {
+#             "id": str(self.id),  # IMPORTANT: convert UUID to string for JSON !!!
+#             "contentFileName": self.contentFileName
+#         }
          
-    # TODO: IMPORTANT: !!!!!!!!!!
-    @classmethod
-    def from_dict(cls, data: dict):
-        return cls(
-            id=uuid.UUID(data["id"]),
-            content=data["content"]
-        )
+#     # TODO: IMPORTANT: !!!!!!!!!!
+#     @classmethod
+#     def from_dict(cls, data: dict):
+#         return cls(
+#             id=uuid.UUID(data["id"]),
+#             content=data["content"]
+#         )
         
-    # why no to_schema() or from_schema methods ???
+#     # why no to_schema() or from_schema methods ???
 
 
 # jk maybe this doesn't have a model since only the content and the metadata get saved to databases .......? yeah no need to save this to db bc its duplicate combined data
@@ -105,7 +105,5 @@ class BlogPostContentModel:
 # to_model()
 
 # to_schema()
-
-# load_content_from_s3() ???? 
 
 # to_dict() // responsible for serializing data into json-able format...? 

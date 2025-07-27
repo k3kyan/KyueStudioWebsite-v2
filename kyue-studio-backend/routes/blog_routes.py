@@ -23,11 +23,16 @@ blog_router = APIRouter(
     # will i convert the response body here to separate content and metadata schemas ????
     # DO I CREATE A SEPARATE SCHEMA FOR THIS SPECIFIC RESPONSE ???
 @blog_router.post("/post/create", response_model=dict) # WHAT IS THE response_model ?????? since i will have to add fields that arent in the BlogPostMetadataSchema schema like id ???
-def create_blog_post(metadata: BlogPostMetadataPOSTSchema, token: str = Depends(oauth2_scheme)): # TODO: FIX: idk what im supposed to pass in too, this parameter is probably wrong sdlfkjs // removed "content: BlogPostContentSchema" parameter
+def create_blog_post(metadata: BlogPostMetadataPOSTSchema, content = File(...), token: str = Depends(oauth2_scheme)): # TODO: FIX: idk what im supposed to pass in too, this parameter is probably wrong sdlfkjs // removed "content: BlogPostContentSchema" parameter
     # should another parameter be: content_file: UploadFile = File(...) ?????
         # jk i dont need UploadFile bc i'm not uploading file ????? regarding the md content anyways, idk about the thumbnail later
     # title: str = Form(...), tags: List[str] = Form(...), summary: str = Form(...), thumbnail_url: Optional[str] = Form(...) ?????
-    
+        # i could probably just use these instead of making a new pydantic schema but idk, well see if it causes headache later
+    # TODO: RESEARCH: PARAMETER content = File(...) will this take in / handle md content ????
+    # NOTES: ??? So i guess the markdown will be sent as a STRING in a POST body json...
+        # Researching more from google:
+            # use multipart/form-data for md files because its suited to large content
+        
     
     # TODO: upload image file
     # TODO: how to save content as markdown file ??
@@ -38,12 +43,15 @@ def create_blog_post(metadata: BlogPostMetadataPOSTSchema, token: str = Depends(
     
     
     # Save content to s3/markdown
-    content = await content.file.read()
-    filename = f"{post_id}.md"
-    with open(f"./data/content/blog-posts/{filename}.md", "wb") as f: #TODO: AWS: would replace with wherever in s3 bucket idk
+    content =  content.file.read() # await ???
+    contentFileName = f"{post_id}.md"
+    with open(f"./data/content/blog-posts/{contentFileName}", "wb") as f: #TODO: AWS: would replace with wherever in s3 bucket idk #do i use wb or w ? // add "encoding="utf-8" ??
         f.write(content)
     # TODO: RESEARCH: in front end, to address md file upload.. use a <form> with enctype="multipart/form-data" and an <input type="file"> for the md content ????
     # TODO: RESEARCH: in front end, create a form specifically for handling md file content (and the metadata) etc ???
+    # I think if i send as "multipart/form-data" in the front end, the backend will generate the file...????????
+    # Send the markdown content as a STRING IN A JSON BODY IN THE REQUEST BODY, not the URL. // + POST/PUT requests allow larger payloads.
+    # TODO: RESEARCH: tho... aws may charge more if the payload is bigger than 2MB or so.... // TODO: is there a way to cap the size of the payload? from frontend maybe? bc when its sent to the backend its already too late // maybe if its too large, you can separate the md content and send separate parts?
     
     # create metadata schema(?) instance using the POST metadata api schema
     metadata = BlogPostMetadataSchema(
@@ -51,21 +59,21 @@ def create_blog_post(metadata: BlogPostMetadataPOSTSchema, token: str = Depends(
         title=metadata.title,
         tags=metadata.tags,
         summary=metadata.summary,
-        thumbnail_url= None #TODO: LATER: metadata.thumbnail_url, #TODO: LATER: how to handle uploading thumbnail image file ? // #how to do "or none" and use default thumbnail if no thumbnail is uploaded?
-        contentFileName=filename # does not include the .md extension
+        thumbnail_url= None, #TODO: LATER: metadata.thumbnail_url, #TODO: LATER: how to handle uploading thumbnail image file ? // #how to do "or none" and use default thumbnail if no thumbnail is uploaded?
+        contentFileName=contentFileName, # DOES include the .md extension (ok but the filename is just post_id + .md, do i need a new variable for it? ... it does add clarity so maybe i will lowkey. And i wont have to keep remembering to add .md at the end of everytime i call the method)
         date_created=post_datetime, #from above
         date_updated= None
     )
     
     # convert the pydantic schema api request body to json model for db
     # metadata is saved to DynamoDB/json
-    save_blog_metadata(metadata)
+    save_post_metadata(metadata)
     
     
     
     
     # content is saved to s3/markdown
-    return {"message": "Post created", "id": str(new_id)}
+    return {"message": "Blog post created", "id": str(post_id)}
 
 
 
