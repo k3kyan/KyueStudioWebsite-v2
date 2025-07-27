@@ -4,13 +4,17 @@ import api from '../../../api/fastapi';
 import { useAuth } from '../../../../GlobalContext';
 import { Navigate } from 'react-router-dom';
 import MessageCard from '../../../components/cards/messagecard/MessageCard';
+import MessageCardColumnStack from '../../../components/cards/messagecard-columnstack/MessageCardColumnStack';
+
+import AddFruitForm from '../../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIForm';
+import FruitList from '../../../components/forms/TEMP_FRUITS_API_FORM/TempFruitsAPIShowList';
 
 const AdminDashboard = () => {
     // ---------------- State variables ----------------
     const [messageList, setMessageList] = useState([]);
     const { isLoggedIn } = useAuth();
 
-    const TEMP_MESSAGE = {
+    const TEMP_message = {
       "firstName": "Grr",
       "lastName": "Growl",
       "email": "growl@grr.com",
@@ -20,6 +24,30 @@ const AdminDashboard = () => {
       ],
       "message": "growl"
     }
+
+    const TEMP_messageList = [
+        {
+        "firstName": "Bob",
+        "lastName": "Microsoft",
+        "email": "bob@microsoft.com",
+        "subject": "Checkout is broken",
+        "tags": [
+            "Feedback",
+            "Bug Report"
+        ],
+        "message": "I can't checkout and pay for my order."
+        },
+        {
+        "firstName": "meow",
+        "lastName": "meow",
+        "email": "meow@grr.com",
+        "subject": "meow",
+        "tags": [
+            "Collaboration"
+        ],
+        "message": "meow"
+        }
+    ]
     
 
     // ---------------- !!!!!!THIS PAGE IS A PROTECTED ROUTE!!!!!! ----------------
@@ -86,10 +114,17 @@ const AdminDashboard = () => {
             </div>
         ))} */}
 
-        sdlkfj
-        <MessageCard message={TEMP_MESSAGE} />
+        <h1>Single Message Components</h1>
+        <div class = "messages">
+            <MessageCard message={TEMP_message} />
+        </div>
 
 
+            
+        <h1>Messages List</h1>
+        <div class = "messages">
+            <MessageCardColumnStack messageList={TEMP_messageList} />
+        </div>
 
         {isLoggedIn && ( 
             <div>
@@ -99,6 +134,16 @@ const AdminDashboard = () => {
 
         {/* TODO: IMPORTANT: PROTECTED: redirect to homepage if not logged in / authorized to view this page */}
 
+
+
+        {/* the Fruit stuff is here for fun and for testing lol, my first working crud implementation! yayy */}
+        {/* TEMP: Just to show that backend is working. DELETE LATER!! */}
+        {/* <TempFruitsAPIForm />
+        <TempFruitsAPIShowList />  */}
+        {/* <AddFruitForm /> (needs parameter so thats why it didnt render correctly)*/} 
+        <FruitList /> 
+
+      
     </div>
   )
 }
