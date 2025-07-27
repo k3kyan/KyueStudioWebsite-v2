@@ -9,6 +9,7 @@ import Shop from './pages/shop/Shop';
 import Blog from './pages/blog/Blog';
 import Art from './pages/art/Art';
 import Login from './pages/login/Login';
+import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import { AuthorizationProvider } from '../GlobalContext'; // CAUTION: correct path...?
 
 function App() {
@@ -30,7 +31,10 @@ function App() {
             
             <Route path="/login" element={<Login />} />
             {/* Protected Routes/Pages */}
-            {/* <Route path="/admin" element={<Login />} /> */}
+            {/* TODO: */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            {/* <Route path="/admin/messages" element={<AdminMessages />} /> */}
+            {/* <Route path="/admin/orders" element={<AdminOrders />} /> */}
           </Routes>
         </main>
 

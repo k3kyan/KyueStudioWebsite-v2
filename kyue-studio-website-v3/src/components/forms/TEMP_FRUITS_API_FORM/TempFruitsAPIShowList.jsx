@@ -19,7 +19,7 @@ const FruitList = () => {
   };
 
   // IMPORTANT: ENDPOINT TO POST /FRUITS (ADDS FRUIT TO DATABASE IN BACKEND)
-  // IMPORTANT: since this is a protect route, for the api.post parameters, we need to add the token!!! 
+  // IMPORTANT: since this is a protect route, for the api.post parameters, we need to add the token!!! (which i actually already did in the fastapi.js or whatever file "api" is declared in)
   const addFruit = async (fruitName) => {
     try {
       await api.post('/fruits', 
