@@ -1,4 +1,3 @@
-import React from 'react'
 import {$getRoot, $getSelection} from 'lexical';
 import {useEffect} from 'react';
 
@@ -8,18 +7,6 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-// import {
-//   $isTextNode,
-//   DOMConversionMap,
-//   DOMExportOutput,
-//   DOMExportOutputMap,
-//   isHTMLElement,
-//   Klass,
-//   LexicalEditor,
-//   LexicalNode,
-//   ParagraphNode,
-//   TextNode,
-// } from 'lexical';
 
 const theme = {
   // Theme styling goes here
@@ -33,27 +20,29 @@ function onError(error) {
   console.error(error);
 }
 
+import "./RichTextEditor.css"
 
 const RichTextEditor = () => {
-    const initialConfig = {
-        namespace: 'MyEditor',
-        theme,
-        onError,
-    };
+  const initialConfig = {
+    namespace: 'MyEditor',
+    theme,
+    onError,
+  };
+
     return (
-    <LexicalComposer initialConfig={initialConfig}>
-      <RichTextPlugin
-        contentEditable={
-          <ContentEditable
-            aria-placeholder={'Enter some text...'}
-            placeholder={<div>Enter some text...</div>}
-          />
-        }
-        ErrorBoundary={LexicalErrorBoundary}
-      />
-      <HistoryPlugin />
-      <AutoFocusPlugin />
-    </LexicalComposer>
+      <LexicalComposer initialConfig={initialConfig}>
+        <RichTextPlugin
+          contentEditable={
+            <ContentEditable
+              aria-placeholder={'Enter some text...'}
+              placeholder={<div>Enter some text...</div>}
+            />
+          }
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <HistoryPlugin />
+        <AutoFocusPlugin />
+      </LexicalComposer>
     )
 }
 

@@ -10,8 +10,7 @@ const AdminCreateBlogPost = () => {
     // ---------------- State variables ----------------
     const { isLoggedIn } = useAuth();
 
-    // ---------------- !!!!!!THIS PAGE IS A PROTECTED ROUTE!!!!!! ----------------
-    // Redirect to homepage if not logged in 
+    // THIS PAGE IS A PROTECTED ROUTE // Redirect to homepage if not logged in 
     if (!isLoggedIn) {
         return <Navigate to="/" />;
     }

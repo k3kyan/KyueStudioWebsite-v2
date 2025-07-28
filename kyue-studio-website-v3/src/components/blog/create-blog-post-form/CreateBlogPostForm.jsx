@@ -1,17 +1,19 @@
 import React from 'react'
 // import library for rich text editor that exports as md
-// import { RichTextEditor } from '@lexical/react/LexicalRichTextEditor'
 import RichTextEditor from './RichTextEditor'
-
-// TODO: ToolbarPlugin - renders UI to control text formatting
-// TODO: TreeViewPlugin - renders debug view below the editor so we can see its state in real time
+import LexicalRichTextEditor from '../lexical-text-editor/LexicalRichTextEditor'
+import { ThemeProvider } from '@aws-amplify/ui-react'
+// import themeED from './themeED'
 
 const CreateBlogPostForm = () => {
   return (
     <div>
-      blog post creation form 
-      {/* react form that exports as md? maybe included in whatever library i find ????  */}
-      <RichTextEditor />
+        blog post creation form 
+        {/* react form that exports as md? maybe included in whatever library i find ????  */}
+        {/* <ThemeProvider theme={themeED}> */}
+            {/* <RichTextEditor /> */}
+        {/* </ThemeProvider> */}
+        <LexicalRichTextEditor />   
     </div>
   )
 }

@@ -4,6 +4,10 @@ import SteamLogo from '../../assets/images/global/steam-logo.jpg'
 import TEMP_SocMedLogo from '../../assets/images/global/steam-logo.jpg'
 import { Link } from 'react-router-dom';
 
+
+// React Icons
+// import { FaLinkedin, FaEmail, FaTwitter, FaInstagram, FaTumblr, FaYoutube, FaTiktok, FaSpotify } from 'react-icons/fa';
+
 const Footer = () => {
   return (
     // {/* TODO: FAILED TO IMPLEMENT TREES AT BOTTOM OF PAGE */}
