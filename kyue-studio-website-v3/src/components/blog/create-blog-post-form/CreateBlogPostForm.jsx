@@ -1,19 +1,16 @@
 import React from 'react'
 // import library for rich text editor that exports as md
-import RichTextEditor from './RichTextEditor'
 import LexicalRichTextEditor from '../lexical-text-editor/LexicalRichTextEditor'
-import { ThemeProvider } from '@aws-amplify/ui-react'
-// import themeED from './themeED'
+import UploadThumbnail from '../upload-thumbnail/UploadThumbnail'
+import PostMetadataForm from '../post-metadata-form/PostMetadataForm'
 
 const CreateBlogPostForm = () => {
   return (
     <div>
-        blog post creation form 
-        {/* react form that exports as md? maybe included in whatever library i find ????  */}
-        {/* <ThemeProvider theme={themeED}> */}
-            {/* <RichTextEditor /> */}
-        {/* </ThemeProvider> */}
+        <h3>blog post creation form </h3> 
         <LexicalRichTextEditor />   
+        <UploadThumbnail /> {/* TODO: Component: Upload photo for thumbnail (backend prob resizes it...?) */}
+        <PostMetadataForm />
     </div>
   )
 }

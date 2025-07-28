@@ -31,6 +31,10 @@ import TreeViewPlugin from './TreeViewPlugin';
 import {parseAllowedColor, parseAllowedFontSize} from './styleConfig';
 import './styleConfig'
 
+// TODO AFTER AWS:Extra plugins from lexical
+// https://lexical.dev/docs/react/plugins#lexicalonchangeplugin
+
+
 const placeholder = 'Enter some rich text...';
 
 const removeStylesExportDOM = (
