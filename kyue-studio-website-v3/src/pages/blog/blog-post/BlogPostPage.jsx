@@ -4,7 +4,7 @@ import api from '../../../api/fastapi';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../GlobalContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
 const BlogPostPage = () => {
@@ -13,6 +13,7 @@ const BlogPostPage = () => {
     const [content, setContent] = useState("");
     const [error, setError] = useState(null);
     const { isLoggedIn } = useAuth();  
+    const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -54,6 +55,7 @@ const BlogPostPage = () => {
         // Navigate('/blog');
         // return <Navigate to="/" />
         alert('Post deleted!');
+        navigate("/blog");
     } catch (err) {
         console.error("Failed to delete:", err);
         setError("Failed to delete blog post.");
