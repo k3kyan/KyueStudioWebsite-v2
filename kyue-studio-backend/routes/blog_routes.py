@@ -9,7 +9,7 @@ import shutil
 import json
 from pathlib import Path
 from fastapi.logger import logger
-from services.blog_service import save_markdown_content, save_thumbnail, save_metadata, load_posts_metadata #add more
+from services.blog_service import save_markdown_content, save_thumbnail, save_metadata, load_posts_metadata, load_single_post_metadata #, delete_markdown_content, delete_thumbnail, delete_metadata #add more
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -114,18 +114,22 @@ async def get_all_blog_posts():
 #     return {"TODO"}
 
 
+# Get single post
 @blog_router.get("/post/{post_id}", response_model=BlogPostMetadataSchema)
 async def get_post_metadata(post_id: uuid.UUID):
+    
+    
     try:
-        metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
+        return load_single_post_metadata(post_id, UPLOAD_DIR)
+        # metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
 
-        if not metadata_path.exists():
-            raise HTTPException(status_code=404, detail="Post metadata not found")
+        # if not metadata_path.exists():
+        #     raise HTTPException(status_code=404, detail="Post metadata not found")
 
-        with metadata_path.open("r", encoding="utf-8") as f:
-            metadata_dict = json.load(f)
+        # with metadata_path.open("r", encoding="utf-8") as f:
+        #     metadata_dict = json.load(f)
 
-        return BlogPostMetadataSchema(**metadata_dict)
+        # return BlogPostMetadataSchema(**metadata_dict)
 
     except Exception as e:
         logger.error(f"Error in get_post_metadata: {e}")
@@ -163,6 +167,7 @@ async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_schem
             metadata = json.load(f)
 
         # Delete content markdown file
+        # delete_markdown_content(post_id, metadata, UPLOAD_DIR)
         content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
         if content_path.exists():
             content_path.unlink()
