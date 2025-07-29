@@ -22,25 +22,21 @@ blog_router = APIRouter(
     # responses={404: {"description": "Not found"}}
 )
 
-
-
-
-
-
-
-
 UPLOAD_DIR = "data/content/blog-posts"
 Path(UPLOAD_DIR).mkdir(exist_ok=True)
 
+# Create a new blog post from frontend admin form
+# TODO: separate into service methods for 1) save markdown content 2) save thumbnail 3) create and save full combined metadata
 @blog_router.post("/create-post")
 async def create_post(
     metadata: str = Form(...),
     thumbnail: Optional[UploadFile] = File(None),
-    content: UploadFile = File(...)
+    content: UploadFile = File(...),
+    token: str = Depends(oauth2_scheme)
 ):
     try:
         # Parse metadata
-        print(f"📥 Raw metadata: {metadata}")
+        print(f"Raw metadata: {metadata}")
         metadata_dict = json.loads(metadata)
         blog_meta = BlogPostMetadataPOSTSchema(**metadata_dict)
         
@@ -182,7 +178,7 @@ async def create_post(
 
 
 # # ----------------------------------- maybe need to do a separate call for each function? 1) sending metadata, 2) sending photo upload, 3) sending content md 
-
+# TODO: i should def do separate service calls 
 # # send thumbnail
 # @blog_router.post("/api/upload-thumbnail")
 # async def upload_thumbnail(file: UploadFile = File(...)):
@@ -269,6 +265,25 @@ async def create_post(
 #     # prob just needs one method: load_posts()
 #     return {"TODO"}
 
+@blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
+async def get_all_blog_posts():
+    metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
+    all_posts = []
+
+    for file in metadata_dir.glob("*.json"):
+        try:
+            with file.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+                post = BlogPostMetadataSchema(**data)
+                all_posts.append(post)
+        except Exception as e:
+            logger.warning(f"Skipped file {file.name} due to error: {e}")
+
+    # Sort by newest first (based on date_created)
+    all_posts.sort(key=lambda p: p.date_created, reverse=True)
+
+    return all_posts
+
 
 # # get one single blog post 
 # # GET /post/{id}
@@ -279,6 +294,23 @@ async def create_post(
 # def get_single_blog_post(id: uuid.UUID): #?? str or uuid.UUID ?? i think uuid because it ONLY becomes a string when saving from the db i think...? otherwise, its uuid for the entire react app i think...?
 #     return {"TODO"}
 
+
+@blog_router.get("/post/{post_id}", response_model=BlogPostMetadataSchema)
+async def get_post_metadata(post_id: uuid.UUID):
+    try:
+        metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
+
+        if not metadata_path.exists():
+            raise HTTPException(status_code=404, detail="Post metadata not found")
+
+        with metadata_path.open("r", encoding="utf-8") as f:
+            metadata_dict = json.load(f)
+
+        return BlogPostMetadataSchema(**metadata_dict)
+
+    except Exception as e:
+        logger.error(f"Error in get_post_metadata: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve metadata")
 
 
 # # PROTECTED ROUTE
