@@ -16,7 +16,12 @@ from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSch
 
 # load_content_from_s3() 
 
-
+# Examples that work
+# http://localhost:8000/thumbnails/48f4d4fd-7aef-4801-87ab-b811837582ed_pixelcitybg.png
+# http://localhost:8000/content/0380b2d8-187c-4403-a0fa-7a0141d5d0eb_content.md
+# http://localhost:8000/blog/post/48f4d4fd-7aef-4801-87ab-b811837582ed
+# http://localhost:8000/thumbnails/aba2fcb9-9628-4f4a-a537-ea08fdac0990_steam-logo.jpg
+# http://localhost:8000/thumbnails/48f4d4fd-7aef-4801-87ab-b811837582ed_pixelcitybg.png
 
 # for @blog_router.post("/create-post")
 # async def create_post(
