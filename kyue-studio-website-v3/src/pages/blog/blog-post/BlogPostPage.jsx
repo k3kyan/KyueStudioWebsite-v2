@@ -3,14 +3,16 @@ import { useEffect, useState } from 'react';
 import api from '../../../api/fastapi';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../../../GlobalContext';
+import { Navigate } from 'react-router-dom';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
 const BlogPostPage = () => {
-    
-  const { post_id } = useParams(); // fetched parameters must match varname in the route <Route path="/blog/post/:post_id
-  const [post, setPost] = useState(null);
-  const [content, setContent] = useState("");
-  const [error, setError] = useState(null);
+    const { post_id } = useParams(); // fetched parameters must match varname in the route <Route path="/blog/post/:post_id
+    const [post, setPost] = useState(null);
+    const [content, setContent] = useState("");
+    const [error, setError] = useState(null);
+    const { isLoggedIn } = useAuth();  
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -41,9 +43,34 @@ const BlogPostPage = () => {
   if (error) return <div>{error}</div>;
   if (!post) return <div>Loading...</div>;
 
+    //   Delete Post endpoint
+  const handleDeletePost = async (event) => {
+    event.preventDefault();
+    try {
+        // await api.delete('/blog/post/${post_id}')
+        await api.delete(`/blog/post/${post_id}`);
+
+        // redirect to blog page after post is deleted
+        // Navigate('/blog');
+        // return <Navigate to="/" />
+        alert('Post deleted!');
+    } catch (err) {
+        console.error("Failed to delete:", err);
+        setError("Failed to delete blog post.");
+    }
+  };
+
+
   return (
     <div className="post-container">
       <Link to="/blog">Back to Blog</Link>
+        {/* Admin Update Delete crud operations */}
+        {/* Conditional Rendering for Protected Routes (Admin stuff) */}
+        {isLoggedIn && ( // REPLACE WITH VARIABLE BOOL ON WHETHER UR LOGGED IN OR NOT
+            <button onClick = {handleDeletePost}>Delete Post</button>
+        )}
+
+
       <h1>{post.title}</h1>
       <img src={'http://localhost:8000/thumbnails/' + post.thumbnail_url} alt={post.title} /> {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
       <p>{post.summary}</p>
