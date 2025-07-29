@@ -21,15 +21,10 @@ def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
     content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
     with content_path.open("wb") as f:
         shutil.copyfileobj(content_file, f)
-    return str(content_path)
-        
-        
-    content_path = Path(upload_dir) / "blog_content" / f"{post_id}_content.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)  # ensure directory exists
-    with content_path.open("wb") as f:
-        shutil.copyfileobj(content_file, f)
-    return str(content_path)
+    return content_path
+
 # 2) save thumbnail 
+# def save_thumbnail(post_id: uuid.UUID, thumbnail_file, UPLOAD_DIR: str):
 # 3) create and save full combined metadata
 
 

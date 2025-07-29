@@ -44,10 +44,14 @@ async def create_post(
         created_at = datetime.now()
 
         # Save markdown content
-        # content_path = save_markdown_content(post_id, content.file, UPLOAD_DIR)
-        content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
-        with content_path.open("wb") as f:
-            shutil.copyfileobj(content.file, f)
+        # print("\nContent:",  content)  // not what i want, i think
+        print("\nContent.filename:",  content.filename) 
+        print("\nContent.file:",  content.file) 
+        # print("\nContent.file.name:",  content.file.name) DOESNT WORK
+        content_path = save_markdown_content(post_id, content.file, UPLOAD_DIR)
+        # content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
+        # with content_path.open("wb") as f:
+        #     shutil.copyfileobj(content.file, f)
 
         # Save thumbnail if present
         if thumbnail:
