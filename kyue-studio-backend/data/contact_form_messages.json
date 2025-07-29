@@ -22,16 +22,6 @@
       "message": "ur website is very cute, wanna work with us? :3"
     },
     {
-      "firstName": "1234",
-      "lastName": "1234",
-      "email": "3242436fs344@23424.com",
-      "subject": "35",
-      "tags": [
-        "Job Opportunity"
-      ],
-      "message": "sdlfjs"
-    },
-    {
       "firstName": "attempt2",
       "lastName": "string",
       "email": "string",
@@ -60,26 +50,6 @@
         "Collaboration"
       ],
       "message": "sdf"
-    },
-    {
-      "firstName": "sddd",
-      "lastName": "dddd",
-      "email": "ddd@dsfs.com",
-      "subject": "ddd",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "sf"
-    },
-    {
-      "firstName": "sddd",
-      "lastName": "dddd",
-      "email": "ddd@dsfs.com",
-      "subject": "ddd",
-      "tags": [
-        "Collaboration"
-      ],
-      "message": "sf"
     }
   ]
 }

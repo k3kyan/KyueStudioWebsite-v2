@@ -24,6 +24,7 @@ blog_router = APIRouter(
 UPLOAD_DIR = "data/content/blog-posts"
 Path(UPLOAD_DIR).mkdir(exist_ok=True)
 
+# PROTECTED
 # Create a new blog post from frontend admin form
 @blog_router.post("/create-post")
 async def create_post(
@@ -87,12 +88,6 @@ async def create_post(
 
 
 
-
-
-
-
-
-
 # get list of all blog posts
 @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 async def get_all_blog_posts():
@@ -106,18 +101,8 @@ async def get_all_blog_posts():
 
 # # get one single blog post 
 # # GET /post/{id}
-# # backend loads metadata from db (uses ID)
-# # backend finds, matches, and loads content from s3 (uses ID)
-# # returns BlogPostSchema
-# @blog_router.get("/post/{id}") #?? correct ???? (TODO: RESEARCH: is this what a query parameter is...? idk the specifics sdlkfj )
-# def get_single_blog_post(id: uuid.UUID): #?? str or uuid.UUID ?? i think uuid because it ONLY becomes a string when saving from the db i think...? otherwise, its uuid for the entire react app i think...?
-#     return {"TODO"}
-
-
-# Get single post
 @blog_router.get("/post/{post_id}", response_model=BlogPostMetadataSchema)
 async def get_post_metadata(post_id: uuid.UUID):
-    
     try:
         return load_single_post_metadata(post_id, UPLOAD_DIR)
 
@@ -136,49 +121,18 @@ async def get_post_metadata(post_id: uuid.UUID):
 
 # # PROTECTED ROUTE
 # # I delete post (ONE OF THE ONLY THINGS THAT WILL PROVE IM LOGGED IN OR NOT FROM USER SIDE AND NOT JUST ADMIN PAGE, so nice for testing authentication)
-# @blog_router.delete("/post/{id}") #idk what the response model is
-# def delete_blog_post(id: str, token: str = Depends(oauth2_scheme)):
-#     # success = delete_message(id)
-#     # if not success:
-#     #     raise HTTPException(status_code=404, detail="Message not found. Nothing deleted.")
-#     return {"TODO"}
-
-
+# @blog_router.delete("/post/{id}") #idk what the response model is // do i even need a response model actually....? its not taking in anything so ...? post id ?? idk
 @blog_router.delete("/post/{post_id}")
 async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
     try:
-        # metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
-
-        # if not metadata_path.exists():
-        #     raise HTTPException(status_code=404, detail="Metadata not found")
-
-        # # Load metadata
-        # with metadata_path.open("r", encoding="utf-8") as f:
-        #     metadata = json.load(f)
-
         # Delete content markdown file
         delete_markdown_content(post_id, UPLOAD_DIR)
-        # content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
-        # if content_path.exists():
-        #     content_path.unlink()
 
         # Delete thumbnail if it's not the default
         delete_thumbnail(post_id, UPLOAD_DIR)
-        # thumbnail_url = metadata.get("thumbnail_url", "")
-        # if (
-        #     thumbnail_url
-        #     and "default-thumbnail" not in thumbnail_url
-        #     and "blog_thumbnails" in thumbnail_url
-        # ):
-        #     thumbnail_filename = Path(thumbnail_url).name
-        #     thumbnail_path = Path(UPLOAD_DIR) / "blog_thumbnails" / thumbnail_filename
-        #     if thumbnail_path.exists():
-        #         thumbnail_path.unlink()
 
         # Delete the metadata file itself
         delete_metadata(post_id, UPLOAD_DIR)
-        # metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
-        # metadata_path.unlink()
 
         return {"message": f"Post {post_id} deleted."}
 

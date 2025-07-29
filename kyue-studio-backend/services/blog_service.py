@@ -87,30 +87,6 @@ def load_single_post_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMe
         return BlogPostMetadataSchema(**metadata_dict)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # @blog_router.delete("/post/{post_id}")
 # async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
 # this load_metadata method is redundant but it helps me think so. I only use it internally here. 
@@ -149,7 +125,6 @@ def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
     # return "success" maybe?
 
 # 3. method to delete the metadata file  (parameter is post_id)
-# keep the try catch block inside the endpoint method
 def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
     # metadata = load_metadata(post_id, UPLOAD_DIR)
     metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
