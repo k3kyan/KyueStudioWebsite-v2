@@ -4,6 +4,7 @@ import shutil
 import uuid
 from fastapi import UploadFile
 from typing import Optional
+from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSchema
 # from models.blog_models import BlogPostMetadataModel #no need to import TagsEnum bc it doesnt exist in models, u dont have a separate json file or db for TagsEnum or anything
 
 
@@ -45,6 +46,10 @@ def save_thumbnail(
         return thumbnail_url
 
 # 3) create and save full combined metadata
+def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPLOAD_DIR: str):
+    metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
+    with metadata_path.open("w", encoding="utf-8") as f:
+        json.dump(full_metadata.model_dump(), f, indent=2, default=str)
 
 
 # @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])

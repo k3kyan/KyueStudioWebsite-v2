@@ -9,7 +9,7 @@ import shutil
 import json
 from pathlib import Path
 from fastapi.logger import logger
-from services.blog_service import save_markdown_content, save_thumbnail #add more
+from services.blog_service import save_markdown_content, save_thumbnail, save_metadata #add more
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -72,9 +72,11 @@ async def create_post(
         
         
         # Save full metadata to file
-        metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
-        with metadata_path.open("w", encoding="utf-8") as f:
-            json.dump(full_metadata.model_dump(), f, indent=2, default=str)
+        # don't need to save path since its not being added to metadata file.. since it is already the metadata file
+        save_metadata(post_id, full_metadata, UPLOAD_DIR)
+        # metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
+        # with metadata_path.open("w", encoding="utf-8") as f:
+        #     json.dump(full_metadata.model_dump(), f, indent=2, default=str)
 
         return JSONResponse({
             "message": "Blog post received!",
