@@ -13,6 +13,7 @@ const BlogCard = ({ post_id, title, tags = [], summary, thumbnail_url, date_crea
     <Link to={`/blog/post/${post_id}`} className="blog-card-link" title={title}>
       <div className="blog-card">
         <img src={'http://localhost:8000/thumbnails/' + thumbnail_url} alt={title} className="blog-image" /> 
+        {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
 
         <h2 className="blog-title">{title}</h2>
         {/* <h2 className="blog-title">{truncateText(title, 50)}</h2>

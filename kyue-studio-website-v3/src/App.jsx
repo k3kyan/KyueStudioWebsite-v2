@@ -14,6 +14,7 @@ import AdminCreateBlogPost from './pages/admin/create-blog-post/AdminCreateBlogP
 import AdminCreateArtPost from './pages/admin/create-art-post/AdminCreateArtPost';
 import AdminOrders from './pages/admin/orders/AdminOrders';
 import AdminMessageBoard from './pages/admin/messages/AdminMessageBoard';
+import BlogPostPage from './pages/blog/blog-post/BlogPostPage';
 
 
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="/index.html" element={<Home />} />
 
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/post/:post_id" element={<BlogPostPage />} /> 
             {/* <Route path="/blog/post/:postId" element={<BlogPostPage />} />  */}
             {/* MAY HAVE SOME MISMATCHED ROUTING */}
 

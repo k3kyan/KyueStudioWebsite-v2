@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import api from '../../../api/fastapi';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
-const BlogPostPage = ({post_id}) => {
+const BlogPostPage = () => {
     
   const { post_id } = useParams();
   const [post, setPost] = useState(null);
@@ -13,12 +13,16 @@ const BlogPostPage = ({post_id}) => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/blog/post/${post_id}`);
-        const data = await res.json();
+        // const res = await fetch(`http://localhost:8000/blog/post/${post_id}`);
+        const res = await api.get(`/blog/post/${post_id}`); //#FIX!!!! NEED THIS FOR DYNAMICS
+        // const res = await api.get(`/blog/post/48f4d4fd-7aef-4801-87ab-b811837582ed`); // hardcoded, works
+        // const data = await res.json();
+        const data = res.data;
         setPost(data);
 
         const contentRes = await fetch(`http://localhost:8000/uploads/blog_content/${data.content_filename}`);
-        const text = await contentRes.text();
+        // const text = await contentRes.text();
+        const text = contentRes.text();
         setContent(text);
       } catch (err) {
         setError("Failed to load blog post.");
@@ -35,7 +39,7 @@ const BlogPostPage = ({post_id}) => {
   return (
     <div className="post-container">
       <h1>{post.title}</h1>
-      <img src={post.thumbnail_url} alt={post.title} />
+      <img src={'http://localhost:8000/thumbnails/' + post.thumbnail_url} alt={post.title} /> {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
       <p>{post.summary}</p>
       <div>
         <strong>Tags:</strong> {post.tags.join(", ")}

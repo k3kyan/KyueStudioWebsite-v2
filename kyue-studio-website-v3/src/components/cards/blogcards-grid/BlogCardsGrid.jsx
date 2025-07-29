@@ -14,7 +14,7 @@ const BlogCardsGrid = ({posts}) => {
           summary={post.summary}
           thumbnail_url={post.thumbnail_url}
           date_created={post.date_created}
-          link={`/blog/${post.id}`}
+          link={`/blog/post/${post.id}`}
         />
       ))}
     </section>
