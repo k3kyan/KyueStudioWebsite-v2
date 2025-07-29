@@ -33,6 +33,7 @@ class BlogPostMetadataModel:
         self.tags = tags
         self.summary = summary
         self.thumbnail_url = thumbnail_url
+        # TODO: FIX: I'M MISSING THE CONTENT_FILENAME VAR ?? HOW IS IT STILL WORKING ??????
         self.date_created = date_created
         self.date_updated = date_updated
         

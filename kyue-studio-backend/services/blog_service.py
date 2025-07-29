@@ -1,3 +1,11 @@
+from pathlib import Path #temp for json db
+import json #temp for json db
+import shutil
+import uuid
+# from models.blog_models import BlogPostMetadataModel #no need to import TagsEnum bc it doesnt exist in models, u dont have a separate json file or db for TagsEnum or anything
+
+
+
 # is this where the schemas get sorted into different models / schemas ????
 
 
@@ -9,6 +17,18 @@
 # for @blog_router.post("/create-post")
 # async def create_post(
 # 1) save markdown content 
+def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
+    content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
+    with content_path.open("wb") as f:
+        shutil.copyfileobj(content_file, f)
+    return str(content_path)
+        
+        
+    content_path = Path(upload_dir) / "blog_content" / f"{post_id}_content.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)  # ensure directory exists
+    with content_path.open("wb") as f:
+        shutil.copyfileobj(content_file, f)
+    return str(content_path)
 # 2) save thumbnail 
 # 3) create and save full combined metadata
 

@@ -47,6 +47,7 @@ class BlogPostMetadataPOSTSchema(BaseModel):
     summary: str
     thumbnail_url: str #Optional[HttpUrl] = None
     content_filename: str #TODO: IMPORTANT !!!!!!!!!!!!!!!!! NOT PUT INTO THE MODELS YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Actually do i even need thumbnail_url and content_filename ..? it works fine without it... hm 
     # would assign contentFileName not in the api, but inside the create_post() endpoint method i think
     
     

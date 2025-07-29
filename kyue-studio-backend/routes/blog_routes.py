@@ -9,8 +9,7 @@ import shutil
 import json
 from pathlib import Path
 from fastapi.logger import logger
-# from services.blog_service import 
-# will need more imports later, just drafting rn
+from services.blog_service import save_markdown_content #add more
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -45,16 +44,11 @@ async def create_post(
         created_at = datetime.now()
 
         # Save markdown content
+        # content_path = save_markdown_content(post_id, content.file, UPLOAD_DIR)
         content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
         with content_path.open("wb") as f:
             shutil.copyfileobj(content.file, f)
-        # content_filename = content_path.name # store just the filename for metadata
 
-        # Save thumbnail if present
-        # if thumbnail:
-        #     thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails"/ thumbnail.filename
-        #     with thumb_path.open("wb") as f:
-        #         shutil.copyfileobj(thumbnail.file, f)
         # Save thumbnail if present
         if thumbnail:
             thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
@@ -70,17 +64,7 @@ async def create_post(
                 
         
         # Use saved filenames
-        # content_path = Path(UPLOAD_DIR) / content.filename
-        # content_filename = content_path.name
         content_filename = f"{post_id}_content.md"
-
-        # REMOVE: duplicate code of above
-        # if thumbnail:
-        #     thumb_path = Path(UPLOAD_DIR) / thumbnail.filename
-        #     thumbnail_url = f"/{UPLOAD_DIR}/{thumbnail.filename}"
-        # else:
-        #     default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
-        #     thumbnail_url = f"/{default_thumb.as_posix()}"
 
         # Create full BlogPostMetadataSchema object
         full_metadata = BlogPostMetadataSchema(
