@@ -29,7 +29,7 @@ blog_router = APIRouter(
 
 
 
-UPLOAD_DIR = "TEMP_uploads"
+UPLOAD_DIR = "data/content/blog-posts"
 Path(UPLOAD_DIR).mkdir(exist_ok=True)
 
 @blog_router.post("/create-post")
@@ -44,21 +44,63 @@ async def create_post(
         metadata_dict = json.loads(metadata)
         blog_meta = BlogPostMetadataPOSTSchema(**metadata_dict)
         
-        # Save metadata to file
-        metadata_path = Path(UPLOAD_DIR) / f"{Path(content.filename).stem}_metadata.json"
-        with metadata_path.open("w", encoding="utf-8") as f:
-            json.dump(blog_meta.model_dump(), f, indent=2)
+        # Generate metadata info not from frontend
+        post_id = uuid.uuid4()
+        created_at = datetime.now()
 
         # Save markdown content
-        content_path = Path(UPLOAD_DIR) / content.filename
+        content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
         with content_path.open("wb") as f:
             shutil.copyfileobj(content.file, f)
+        # content_filename = content_path.name # store just the filename for metadata
 
         # Save thumbnail if present
+        # if thumbnail:
+        #     thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails"/ thumbnail.filename
+        #     with thumb_path.open("wb") as f:
+        #         shutil.copyfileobj(thumbnail.file, f)
+        # Save thumbnail if present
         if thumbnail:
-            thumb_path = Path(UPLOAD_DIR) / thumbnail.filename
+            thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
+            thumb_path.parent.mkdir(parents=True, exist_ok=True)  # ensure folder exists
             with thumb_path.open("wb") as f:
                 shutil.copyfileobj(thumbnail.file, f)
+            thumbnail_url = f"/{thumb_path.as_posix()}"
+        else:
+            default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
+            thumbnail_url = f"/{default_thumb.as_posix()}"
+            
+                
+        
+        # Use saved filenames
+        content_path = Path(UPLOAD_DIR) / content.filename
+        content_filename = content_path.name
+
+        # REMOVE: duplicate code of above
+        # if thumbnail:
+        #     thumb_path = Path(UPLOAD_DIR) / thumbnail.filename
+        #     thumbnail_url = f"/{UPLOAD_DIR}/{thumbnail.filename}"
+        # else:
+        #     default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
+        #     thumbnail_url = f"/{default_thumb.as_posix()}"
+
+        # Create full BlogPostMetadataSchema object
+        full_metadata = BlogPostMetadataSchema(
+            id=post_id,
+            title=blog_meta.title,
+            tags=blog_meta.tags,
+            summary=blog_meta.summary,
+            thumbnail_url=thumbnail_url,
+            content_filename=content_filename,
+            date_created=created_at,
+            date_updated=None
+        )
+        
+        
+        # Save full metadata to file
+        metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
+        with metadata_path.open("w", encoding="utf-8") as f:
+            json.dump(full_metadata.model_dump(), f, indent=2, default=str)
 
         return JSONResponse({
             "message": "Blog post received!",
