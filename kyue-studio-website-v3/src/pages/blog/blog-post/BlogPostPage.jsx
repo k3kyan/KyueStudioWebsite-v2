@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../../../api/fastapi';
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
 const BlogPostPage = () => {
@@ -42,6 +43,7 @@ const BlogPostPage = () => {
 
   return (
     <div className="post-container">
+      <Link to="/blog">Back to Blog</Link>
       <h1>{post.title}</h1>
       <img src={'http://localhost:8000/thumbnails/' + post.thumbnail_url} alt={post.title} /> {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
       <p>{post.summary}</p>
