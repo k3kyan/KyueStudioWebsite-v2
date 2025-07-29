@@ -28,7 +28,9 @@
   margin: 12px 0;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  /* TODO: give title containers a fixed widthm, in backend ?? or soemthing idk */
+  text-overflow: ellipsis; 
+  display: block;
 }
 
 .blog-meta {

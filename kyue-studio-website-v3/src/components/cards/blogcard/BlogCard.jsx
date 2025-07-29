@@ -1,36 +1,44 @@
 import React from 'react'
 import './BlogCard.css';
 import { FaCalendarAlt, FaTag } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 // TODO: probably have AWS Lambda crop the thumbnail images to a certain dimension so i dont have to crop it here
-
-const BlogCard = ({ image, title, date, tag, link = "#" }) => {
+// could've included summary but kinda lazy also its a lot of work to fix that rn so i'll do it later
+const BlogCard = ({ post_id, title, tags = [], summary, thumbnail_url, date_created, link = "#" }) => {
+// const truncateText = (text, maxLength) =>
+//   text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  
   return (
-    <a href={link} className="blog-card-link" title={title}>
+    <Link to={`/blog/post/${post_id}`} className="blog-card-link" title={title}>
       <div className="blog-card">
-        <img src={image} alt={title} className="blog-image" />
+        <img src={'http://localhost:8000/thumbnails/' + thumbnail_url} alt={title} className="blog-image" /> 
+
         <h2 className="blog-title">{title}</h2>
+        {/* <h2 className="blog-title">{truncateText(title, 50)}</h2>
+        <p className="blog-summary">{truncateText(summary, 150)}</p> */}
 
         <div className="blog-meta">
           <div className="blog-date">
             <FaCalendarAlt className="icon" />
-            <span>{date}</span>
+            <span>{new Date(date_created).toLocaleDateString()}</span>
           </div>
 
           <div className="blog-tag">
             <FaTag className="icon" />
-            <span>{tag}</span>
-            {/* TODO: Fix tags not showing up, need to iterate over a list of tags */}
-              {/* {tags.map((tag, idx) => (
+            {tags.length > 0 ? (
+              tags.map((tag, idx) => (
                 <span key={idx} className="tag">
                   {tag}
                 </span>
-              ))} */}
+              ))
+            ) : (
+              <span className="tag">No tags</span>
+            )}
           </div>
         </div>
-        
       </div>
-    </a>
+    </Link>
   )
 }
 

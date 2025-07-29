@@ -30,7 +30,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/index.html" element={<Home />} />
+
             <Route path="/blog" element={<Blog />} />
+            {/* <Route path="/blog/post/:postId" element={<BlogPostPage />} />  */}
+            {/* MAY HAVE SOME MISMATCHED ROUTING */}
+
             <Route path="/art" element={<Art />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/about" element={<About />} />

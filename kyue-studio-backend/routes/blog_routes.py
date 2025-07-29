@@ -61,7 +61,8 @@ async def create_post(
             thumb_path.parent.mkdir(parents=True, exist_ok=True)  # ensure folder exists
             with thumb_path.open("wb") as f:
                 shutil.copyfileobj(thumbnail.file, f)
-            thumbnail_url = f"/{thumb_path.as_posix()}"
+            # thumbnail_url = f"/{thumb_path.as_posix()}"
+            thumbnail_url = f"{post_id}_{thumbnail.filename}" #TODO: changed to only be filename, not path
         else:
             default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
             thumbnail_url = f"/{default_thumb.as_posix()}"

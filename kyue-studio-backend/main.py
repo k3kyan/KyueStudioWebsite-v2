@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from routes.fruit_routes import fruit_router #TEMP for testing
+from fastapi.staticfiles import StaticFiles
 # from routes.login_routes import login_router
 from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
@@ -11,6 +12,12 @@ from auth import auth_handler
 # The FastAPI application/instance
 app = FastAPI()
 
+# Mount static uploads
+# TODO: this doesnt load/work, idk why
+# app.mount("/uploads", StaticFiles(directory="data/content/blog-posts"), name="uploads") #mounting all files from the blog-posts directory
+app.mount("/thumbnails", StaticFiles(directory="data/content/blog-posts/blog_thumbnails"), name="thumbnails")
+app.mount("/content", StaticFiles(directory="data/content/blog-posts/blog_content"), name="content")
+app.mount("/metadata", StaticFiles(directory="data/content/blog-posts/blog_metadata"), name="metadata")
 
 # Origins that are allowed, and given access to our API
 # CORS setup
