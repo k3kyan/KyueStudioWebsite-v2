@@ -4,13 +4,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from routes.fruit_routes import fruit_router #TEMP for testing
+from fastapi.staticfiles import StaticFiles
 # from routes.login_routes import login_router
-from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes #this way can import multiple routes in one line, less bloating
+from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
 
 # The FastAPI application/instance
 app = FastAPI()
 
+# Mount static uploads
+# TODO: this doesnt load/work, idk why
+# app.mount("/uploads", StaticFiles(directory="data/content/blog-posts"), name="uploads") #mounting all files from the blog-posts directory
+app.mount("/thumbnails", StaticFiles(directory="data/content/blog-posts/blog_thumbnails"), name="thumbnails")
+app.mount("/content", StaticFiles(directory="data/content/blog-posts/blog_content"), name="content")
+app.mount("/metadata", StaticFiles(directory="data/content/blog-posts/blog_metadata"), name="metadata")
 
 # Origins that are allowed, and given access to our API
 # CORS setup
@@ -42,6 +49,7 @@ app.include_router(fruit_router) #TEMP
 app.include_router(login_routes.login_router)
 app.include_router(authentication_routes.authentication_router) #Something went wrong when i added this before, but now i restarted app and its working now so idk, but if theres a problem in the future maybe check this ...?
 app.include_router(contact_form_messages_routes.contact_form_router)
+app.include_router(blog_routes.blog_router)
 
 
 # runs the uvicorn server

@@ -1,6 +1,6 @@
 // To globally conditionally render thru React app
 // use React Context to store and manage a global isLoggedIn state (instead of duplicating useState in each component like in your current LoginForm.jsx).
-
+// TODO: why did i put this file all the way out here instead of at the same level as App.jsx ??
 
 import { createContext, useContext, useState, useEffect } from 'react';
 

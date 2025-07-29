@@ -10,3 +10,24 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+
+## Other dependencies I used
+<!-- vite -->
+command for vite here idk what it was
+<!-- other dependencies i might be missing -->
+??? idk
+<!-- axios for connecting to backend -->
+axios 
+<!-- https://lexical.dev/docs/getting-started/react -->
+npm install --save lexical @lexical/react
+npm install lexical@latest @lexical/react@latest @lexical/markdown@latest
+<!-- MUI Icons // actually, i dont think i needed MUI -->
+npm install @mui/icons-material
+npm install @mui/icons-material @mui/material @emotion/react @emotion/styled
+<!-- React Icons -->
+forgot command
+<!-- to render markdown files -->
+npm install react-markdown

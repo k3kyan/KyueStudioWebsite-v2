@@ -29,6 +29,7 @@ function Header() {
         {/* Conditional Rendering for Protected Routes (Admin stuff) */}
         {isLoggedIn && ( // REPLACE WITH VARIABLE BOOL ON WHETHER UR LOGGED IN OR NOT
           <Link to="/admin/dashboard">Admin</Link>
+          // logout button ?!
         )}
       </nav>
     </header>
