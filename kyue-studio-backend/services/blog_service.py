@@ -111,23 +111,47 @@ def load_single_post_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMe
 
 
 
-# # @blog_router.delete("/post/{post_id}")
-# # async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
-# def load_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMetadataSchema:
-#     pass
-#     # return THIS IS IMPLEMENTED ABOVE IN THE GET SINGLE POST THING
+# @blog_router.delete("/post/{post_id}")
+# async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
+# this load_metadata method is redundant but it helps me think so. I only use it internally here. 
+def load_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMetadataSchema:
+    return load_single_post_metadata(post_id, UPLOAD_DIR)
 
-# # 1. method to delete content markdown file (parameter is post_id)
-# def delete_markdown_content(post_id: uuid.UUID, metadata: BlogPostMetadataSchema, UPLOAD_DIR: str):
-#         content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
-#         if content_path.exists():
-#             content_path.unlink()
+# 1. method to delete content markdown file (parameter is post_id)
+def delete_markdown_content(post_id: uuid.UUID, UPLOAD_DIR: str):
+    # load specific post's metadata so we can find what to delete
+    metadata = load_metadata(post_id, UPLOAD_DIR)
+    
+    # delete content markdown file
+    # content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
+    content_path = Path(UPLOAD_DIR) / "blog_content" / metadata.content_filename
+    if content_path.exists():
+        content_path.unlink()
+    # return "success" maybe?
             
-# # 2. method to delete thumbnail if it's not the default (parameter is post_id)
-# def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
-#     pass
+# 2. method to delete thumbnail if it's not the default (parameter is post_id)
+def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
+    # load specific post's metadata so we can find what to delete
+    metadata = load_metadata(post_id, UPLOAD_DIR)
+    
+    # delete thumbnail
+    # thumbnail_url = metadata.get("thumbnail_url", "")
+    thumbnail_url = getattr(metadata, "thumbnail_url", "")
+    if (
+        thumbnail_url
+        and "default-thumbnail" not in thumbnail_url
+        and "blog_thumbnails" in thumbnail_url
+    ):
+        thumbnail_filename = Path(thumbnail_url).name
+        thumbnail_path = Path(UPLOAD_DIR) / "blog_thumbnails" / thumbnail_filename
+        if thumbnail_path.exists():
+            thumbnail_path.unlink()
+    # return "success" maybe?
 
-# # 3. method to delete the metadata file  (parameter is post_id)
-# # keep the try catch block inside the endpoint method
-# def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
-#     pass
+# 3. method to delete the metadata file  (parameter is post_id)
+# keep the try catch block inside the endpoint method
+def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
+    # metadata = load_metadata(post_id, UPLOAD_DIR)
+    metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
+    metadata_path.unlink()
+    # return "success" maybe?
