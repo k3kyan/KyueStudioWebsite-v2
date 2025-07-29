@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../../../api/fastapi';
+import ReactMarkdown from 'react-markdown';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
 const BlogPostPage = () => {
     
-  const { post_id } = useParams();
+  const { post_id } = useParams(); // fetched parameters must match varname in the route <Route path="/blog/post/:post_id
   const [post, setPost] = useState(null);
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
@@ -20,9 +21,12 @@ const BlogPostPage = () => {
         const data = res.data;
         setPost(data);
 
-        const contentRes = await fetch(`http://localhost:8000/uploads/blog_content/${data.content_filename}`);
+        const contentRes = await fetch(`http://localhost:8000/content/${data.content_filename}`); // TODO: replace with a better localhost idk why this doesnt work
+        // const contentRes = await fetch(`http://localhost:8000/content/0380b2d8-187c-4403-a0fa-7a0141d5d0eb_content.md`); // HARDCODED, WORKS // idk how to make it dynamic, might be an issue for aws 
         // const text = await contentRes.text();
-        const text = contentRes.text();
+        // const text = contentRes.text();
+        // setContent(text);
+        const text = await contentRes.text();
         setContent(text);
       } catch (err) {
         setError("Failed to load blog post.");
@@ -49,7 +53,8 @@ const BlogPostPage = () => {
       </div>
       <hr />
       <div>
-        <pre style={{ whiteSpace: 'pre-wrap' }}>{content}</pre>
+        {/* <pre style={{ whiteSpace: 'pre-wrap' }}>{content}</pre> */}
+        <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     </div>
   );

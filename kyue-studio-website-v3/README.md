@@ -29,3 +29,5 @@ npm install @mui/icons-material
 npm install @mui/icons-material @mui/material @emotion/react @emotion/styled
 <!-- React Icons -->
 forgot command
+<!-- to render markdown files -->
+npm install react-markdown

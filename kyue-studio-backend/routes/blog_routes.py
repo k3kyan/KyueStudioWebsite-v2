@@ -70,8 +70,9 @@ async def create_post(
                 
         
         # Use saved filenames
-        content_path = Path(UPLOAD_DIR) / content.filename
-        content_filename = content_path.name
+        # content_path = Path(UPLOAD_DIR) / content.filename
+        # content_filename = content_path.name
+        content_filename = f"{post_id}_content.md"
 
         # REMOVE: duplicate code of above
         # if thumbnail:
