@@ -54,6 +54,8 @@ def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPL
 
 # @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 # async def get_all_blog_posts():
+def load_posts():
+    pass
 # 1. since this will be different in dynamodb, just lowkey put all of it into one function that returns all the posts
 
 

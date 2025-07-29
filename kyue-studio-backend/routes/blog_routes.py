@@ -25,7 +25,6 @@ UPLOAD_DIR = "data/content/blog-posts"
 Path(UPLOAD_DIR).mkdir(exist_ok=True)
 
 # Create a new blog post from frontend admin form
-# TODO: separate into service methods for 1) save markdown content 2) save thumbnail 3) create and save full combined metadata
 @blog_router.post("/create-post")
 async def create_post(
     metadata: str = Form(...),
@@ -44,16 +43,11 @@ async def create_post(
         created_at = datetime.now()
 
         # Save markdown content
-        # print("\nContent:",  content)  // not what i want, i think
-        # print("\nContent.filename:",  content.filename) 
         # print("\nContent.file:",  content.file) 
-        # print("\nContent.file.name:",  content.file.name) DOESNT WORK
         content_path = save_markdown_content(post_id, content.file, UPLOAD_DIR)
 
         # Save thumbnail if present
         thumbnail_url = save_thumbnail(post_id, thumbnail, UPLOAD_DIR)
-            
-                
         
         # Use saved filenames
         content_filename = f"{post_id}_content.md"
@@ -70,14 +64,11 @@ async def create_post(
             date_updated=None
         )
         
-        
         # Save full metadata to file
         # don't need to save path since its not being added to metadata file.. since it is already the metadata file
         save_metadata(post_id, full_metadata, UPLOAD_DIR)
-        # metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
-        # with metadata_path.open("w", encoding="utf-8") as f:
-        #     json.dump(full_metadata.model_dump(), f, indent=2, default=str)
-
+        
+        
         return JSONResponse({
             "message": "Blog post received!",
             "metadata": blog_meta.model_dump(),
@@ -89,102 +80,10 @@ async def create_post(
         logger.error(f"Error in create_post: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-
-
-
-
-
-
-# # PROTECTED ROUTE
-# # I submit post from admin frontend form
-# # backend (this endpoint/method) receives [???? what does this receive ????] what does frontend send when i post a new blog post ????
-#     # will i convert the response body here to separate content and metadata schemas ????
-#     # DO I CREATE A SEPARATE SCHEMA FOR THIS SPECIFIC RESPONSE ???
-# @blog_router.post("/post/create", response_model=dict) # WHAT IS THE response_model ?????? since i will have to add fields that arent in the BlogPostMetadataSchema schema like id ???
-# def create_blog_post(metadata: BlogPostMetadataPOSTSchema, content = File(...), token: str = Depends(oauth2_scheme)): # TODO: FIX: idk what im supposed to pass in too, this parameter is probably wrong sdlfkjs // removed "content: BlogPostContentSchema" parameter
-#     # should another parameter be: content_file: UploadFile = File(...) ?????
-#         # jk i dont need UploadFile bc i'm not uploading file ????? regarding the md content anyways, idk about the thumbnail later
-#     # title: str = Form(...), tags: List[str] = Form(...), summary: str = Form(...), thumbnail_url: Optional[str] = Form(...) ?????
-#         # i could probably just use these instead of making a new pydantic schema but idk, well see if it causes headache later
-#     # TODO: RESEARCH: PARAMETER content = File(...) will this take in / handle md content ????
-#     # NOTES: ??? So i guess the markdown will be sent as a STRING in a POST body json...
-#         # Researching more from google:
-#             # use multipart/form-data for md files because its suited to large content
-        
-    
-#     # TODO: upload image file
-#     # TODO: how to save content as markdown file ??
-    
-#     post_id = uuid.uuid4() # generate id = uuid.UUID and save it to metadata
-#     post_datetime = datetime.now() #generate datetime
-    
-    
-    
-#     # Save content to s3/markdown
-#     content =  content.file.read() # await ???
-#     contentFileName = f"{post_id}.md"
-#     with open(f"./data/content/blog-posts/{contentFileName}", "wb") as f: #TODO: AWS: would replace with wherever in s3 bucket idk #do i use wb or w ? // add "encoding="utf-8" ??
-#         f.write(content)
-#     # TODO: RESEARCH: in front end, to address md file upload.. use a <form> with enctype="multipart/form-data" and an <input type="file"> for the md content ????
-#     # TODO: RESEARCH: in front end, create a form specifically for handling md file content (and the metadata) etc ???
-#     # I think if i send as "multipart/form-data" in the front end, the backend will generate the file...????????
-#     # Send the markdown content as a STRING IN A JSON BODY IN THE REQUEST BODY, not the URL. // + POST/PUT requests allow larger payloads.
-#     # TODO: RESEARCH: tho... aws may charge more if the payload is bigger than 2MB or so.... // TODO: is there a way to cap the size of the payload? from frontend maybe? bc when its sent to the backend its already too late // maybe if its too large, you can separate the md content and send separate parts?
-    
-#     # create metadata schema(?) instance using the POST metadata api schema
-#     metadata = BlogPostMetadataSchema(
-#         id=post_id, #from above
-#         title=metadata.title,
-#         tags=metadata.tags,
-#         summary=metadata.summary,
-#         thumbnail_url= None, #TODO: LATER: metadata.thumbnail_url, #TODO: LATER: how to handle uploading thumbnail image file ? // #how to do "or none" and use default thumbnail if no thumbnail is uploaded?
-#         contentFileName=contentFileName, # DOES include the .md extension (ok but the filename is just post_id + .md, do i need a new variable for it? ... it does add clarity so maybe i will lowkey. And i wont have to keep remembering to add .md at the end of everytime i call the method)
-#         date_created=post_datetime, #from above
-#         date_updated= None
-#     )
-    
-#     # convert the pydantic schema api request body to json model for db
+#     # TODO: RESEARCH: tho... aws may charge more if the payload is bigger than 2MB or so.... // TODO: is there a way to cap the size of the payload? from frontend maybe? bc when its sent to the backend its already too late 
+#               // maybe if its too large, you can separate the md content and send separate parts?
 #     # metadata is saved to DynamoDB/json
-#     save_post_metadata(metadata)
-    
-    
-    
-    
 #     # content is saved to s3/markdown
-#     return {"message": "Blog post created", "id": str(post_id)}
-
-
-
-
-# # ----------------------------------- maybe need to do a separate call for each function? 1) sending metadata, 2) sending photo upload, 3) sending content md 
-# TODO: i should def do separate service calls 
-# # send thumbnail
-# @blog_router.post("/api/upload-thumbnail")
-# async def upload_thumbnail(file: UploadFile = File(...)):
-#     file_path = f"thumbnails/{uuid4()}.png"
-#     with open(file_path, "wb") as f:
-#         f.write(await file.read())
-#     return {"filePath": file_path}
-
-
-# # send markdown content
-# @blog_router.post("/api/upload-content")
-# async def upload_md(file: UploadFile = File(...)):
-#     file_path = f"blog_content/{uuid4()}.md"
-#     with open(file_path, "wb") as f:
-#         f.write(await file.read())
-#     return {"filePath": file_path}
-
-
-# # send metadata
-# @blog_router.post("/api/create-post")
-# async def create_post(post: BlogPostMetadataPOSTSchema):
-#     # Store in JSON for now or DynamoDB later
-#     metadata_path = f"metadata/{uuid4()}.json"
-#     with open(metadata_path, "w") as f:
-#         json.dump(post.dict(), f)
-#     return {"status": "success"}
 
 
 
@@ -194,57 +93,7 @@ async def create_post(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # get list of all blog posts
-# @blog_router.get("/posts")
-# def get_all_blog_posts(): #prob doesnt need parameters
-#     # prob just needs one method: load_posts()
-#     return {"TODO"}
-
+# get list of all blog posts
 @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 async def get_all_blog_posts():
     metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
