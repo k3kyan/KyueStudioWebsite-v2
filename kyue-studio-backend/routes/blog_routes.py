@@ -9,7 +9,7 @@ import shutil
 import json
 from pathlib import Path
 from fastapi.logger import logger
-from services.blog_service import save_markdown_content, save_thumbnail, save_metadata #add more
+from services.blog_service import save_markdown_content, save_thumbnail, save_metadata, load_posts_metadata #add more
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -96,17 +96,7 @@ async def create_post(
 # get list of all blog posts
 @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 async def get_all_blog_posts():
-    metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
-    all_posts = []
-
-    for file in metadata_dir.glob("*.json"):
-        try:
-            with file.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-                post = BlogPostMetadataSchema(**data)
-                all_posts.append(post)
-        except Exception as e:
-            logger.warning(f"Skipped file {file.name} due to error: {e}")
+    all_posts = load_posts_metadata(UPLOAD_DIR)
 
     # Sort by newest first (based on date_created)
     all_posts.sort(key=lambda p: p.date_created, reverse=True)

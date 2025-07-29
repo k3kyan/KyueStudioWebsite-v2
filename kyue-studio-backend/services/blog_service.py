@@ -3,7 +3,8 @@ import json #temp for json db
 import shutil
 import uuid
 from fastapi import UploadFile
-from typing import Optional
+from typing import Optional, List
+from fastapi.logger import logger
 from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSchema
 # from models.blog_models import BlogPostMetadataModel #no need to import TagsEnum bc it doesnt exist in models, u dont have a separate json file or db for TagsEnum or anything
 
@@ -54,8 +55,20 @@ def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPL
 
 # @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 # async def get_all_blog_posts():
-def load_posts():
-    pass
+def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
+    metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
+    all_posts = []
+
+    for file in metadata_dir.glob("*.json"):
+        try:
+            with file.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+                post = BlogPostMetadataSchema(**data)
+                all_posts.append(post)
+        except Exception as e:
+            logger.warning(f"Skipped file {file.name} due to error: {e}")
+            
+    return all_posts
 # 1. since this will be different in dynamodb, just lowkey put all of it into one function that returns all the posts
 
 
