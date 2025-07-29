@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../../../GlobalContext';
 import api from '../../../api/fastapi';
-import CreateBlogPostForm from '../../../components/blog/create-blog-post-form/CreateBlogPostForm';
+// import CreateBlogPostForm from '../../../components/blog/create-blog-post-form/CreateBlogPostForm';
+import CreateBlogPostForm from '../../../components/blog-v2/CreateBlogPostForm';
 
 // TODO: reference contact form jsx
 
@@ -19,6 +20,7 @@ const AdminCreateBlogPost = () => {
     return (
         <div>
             <h2>Admin Create Blog Post</h2>
+            {/* <CreateBlogPostForm /> */}
             <CreateBlogPostForm />
         </div>
     )

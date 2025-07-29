@@ -23,6 +23,7 @@ command for vite here idk what it was
 axios 
 <!-- https://lexical.dev/docs/getting-started/react -->
 npm install --save lexical @lexical/react
+npm install lexical@latest @lexical/react@latest @lexical/markdown@latest
 <!-- MUI Icons // actually, i dont think i needed MUI -->
 npm install @mui/icons-material
 npm install @mui/icons-material @mui/material @emotion/react @emotion/styled

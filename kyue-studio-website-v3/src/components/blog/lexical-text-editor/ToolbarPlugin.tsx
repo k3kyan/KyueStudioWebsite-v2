@@ -25,17 +25,9 @@ import './styles.css'
 // React Icons
 import { FaUndo, FaRedo, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaTag, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify} from 'react-icons/fa';
 
-// icons from MaterialUI
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatItalicIcon from '@mui/icons-material/FormatItalic';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
-import FormatStrikethroughIcon from '@mui/icons-material/StrikethroughS';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import UndoIcon from '@mui/icons-material/Undo';
-import RedoIcon from '@mui/icons-material/Redo';
+// TODO: add image upload function
+
+
 
 function Divider() {
   return <div className="divider" />;

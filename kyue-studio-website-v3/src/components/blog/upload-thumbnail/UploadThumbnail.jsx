@@ -2,7 +2,15 @@ import React, { useState } from "react";
 
 // https://stackoverflow.com/questions/43692479/how-to-upload-an-image-in-react-js
 
-const UploadThumbnail = () => {const [selectedImage, setSelectedImage] = useState(null);
+const UploadThumbnail = ({onThumbnailSelect }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+    onThumbnailSelect(file); // pass file to parent
+    console.log(event.target.files[0]); // Log the selected file
+  };
   
   return (
     <div>
@@ -31,10 +39,11 @@ const UploadThumbnail = () => {const [selectedImage, setSelectedImage] = useStat
         type="file"
         name="myImage"
         // Event handler to capture file selection and update the state
-        onChange={(event) => {
-          console.log(event.target.files[0]); // Log the selected file
-          setSelectedImage(event.target.files[0]); // Update the state with the selected file
-        }}
+        onChange={handleChange}
+        // onChange={(event) => {
+        //   console.log(event.target.files[0]); // Log the selected file
+        //   setSelectedImage(event.target.files[0]); // Update the state with the selected file
+        // }}
       />
     </div>
   )

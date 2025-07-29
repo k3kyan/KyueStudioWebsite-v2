@@ -9,8 +9,8 @@ class BlogPostMetadataSchema(BaseModel):
     title: str # = Field(..., min_length=1, max_length=100) #TODO: add this constraint later so it wont cause issues in the future
     tags: List[str]
     summary: str
-    thumbnail_url: Optional[HttpUrl] = None
-    contentFileName = str #TODO: RESEARCH: FIX: ??? is this right ??? ig it makes sense itd be a str bc its just the file name ???? (not including the .md part) // tho ig the filename is just the postid ..?? ldskfj
+    thumbnail_url: str # Optional[HttpUrl] = None
+    content_filename: str #TODO: RESEARCH: FIX: ??? is this right ??? ig it makes sense itd be a str bc its just the file name ???? (not including the .md part) // tho ig the filename is just the postid ..?? ldskfj
     date_created: datetime
     date_updated: Optional[datetime] = None
     
@@ -45,7 +45,8 @@ class BlogPostMetadataPOSTSchema(BaseModel):
     title: str # = Field(..., min_length=1, max_length=100) #TODO: add this constraint later so it wont cause issues in the future
     tags: List[str] #no restrictions, i will make type in my own tags at the time of making post
     summary: str
-    thumbnail_url: Optional[HttpUrl] = None
+    thumbnail_url: str #Optional[HttpUrl] = None
+    content_filename: str #TODO: IMPORTANT !!!!!!!!!!!!!!!!! NOT PUT INTO THE MODELS YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # would assign contentFileName not in the api, but inside the create_post() endpoint method i think
     
     
@@ -59,6 +60,6 @@ class BlogPostMetadataPUTSchema(BaseModel):
     title: str # = Field(..., min_length=1, max_length=100) #TODO: add this constraint later so it wont cause issues in the future
     tags: List[str] #no restrictions, i will make type in my own tags at the time of making post
     summary: str
-    thumbnail_url: Optional[HttpUrl] = None
+    thumbnail_url: str #Optional[HttpUrl] = None
     # content ????
     
