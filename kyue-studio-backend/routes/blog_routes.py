@@ -329,3 +329,42 @@ async def get_post_metadata(post_id: uuid.UUID):
 #     # if not success:
 #     #     raise HTTPException(status_code=404, detail="Message not found. Nothing deleted.")
 #     return {"TODO"}
+
+
+@blog_router.delete("/post/{post_id}")
+async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
+    try:
+        metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
+
+        if not metadata_path.exists():
+            raise HTTPException(status_code=404, detail="Metadata not found")
+
+        # Load metadata
+        with metadata_path.open("r", encoding="utf-8") as f:
+            metadata = json.load(f)
+
+        # Delete content markdown file
+        content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
+        if content_path.exists():
+            content_path.unlink()
+
+        # Delete thumbnail if it's not the default
+        thumbnail_url = metadata.get("thumbnail_url", "")
+        if (
+            thumbnail_url
+            and "default-thumbnail" not in thumbnail_url
+            and "blog_thumbnails" in thumbnail_url
+        ):
+            thumbnail_filename = Path(thumbnail_url).name
+            thumbnail_path = Path(UPLOAD_DIR) / "blog_thumbnails" / thumbnail_filename
+            if thumbnail_path.exists():
+                thumbnail_path.unlink()
+
+        # Delete the metadata file itself
+        metadata_path.unlink()
+
+        return {"message": f"Post {post_id} deleted."}
+
+    except Exception as e:
+        logger.error(f"Error deleting post {post_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete blog post")
