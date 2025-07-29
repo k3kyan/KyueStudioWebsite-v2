@@ -9,7 +9,7 @@ import shutil
 import json
 from pathlib import Path
 from fastapi.logger import logger
-from services.blog_service import save_markdown_content #add more
+from services.blog_service import save_markdown_content, save_thumbnail #add more
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -45,25 +45,13 @@ async def create_post(
 
         # Save markdown content
         # print("\nContent:",  content)  // not what i want, i think
-        print("\nContent.filename:",  content.filename) 
-        print("\nContent.file:",  content.file) 
+        # print("\nContent.filename:",  content.filename) 
+        # print("\nContent.file:",  content.file) 
         # print("\nContent.file.name:",  content.file.name) DOESNT WORK
         content_path = save_markdown_content(post_id, content.file, UPLOAD_DIR)
-        # content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
-        # with content_path.open("wb") as f:
-        #     shutil.copyfileobj(content.file, f)
 
         # Save thumbnail if present
-        if thumbnail:
-            thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
-            thumb_path.parent.mkdir(parents=True, exist_ok=True)  # ensure folder exists
-            with thumb_path.open("wb") as f:
-                shutil.copyfileobj(thumbnail.file, f)
-            # thumbnail_url = f"/{thumb_path.as_posix()}"
-            thumbnail_url = f"{post_id}_{thumbnail.filename}" #TODO: changed to only be filename, not path
-        else:
-            default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
-            thumbnail_url = f"/{default_thumb.as_posix()}"
+        thumbnail_url = save_thumbnail(post_id, thumbnail, UPLOAD_DIR)
             
                 
         

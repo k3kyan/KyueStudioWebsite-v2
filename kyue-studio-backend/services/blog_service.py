@@ -2,6 +2,8 @@ from pathlib import Path #temp for json db
 import json #temp for json db
 import shutil
 import uuid
+from fastapi import UploadFile
+from typing import Optional
 # from models.blog_models import BlogPostMetadataModel #no need to import TagsEnum bc it doesnt exist in models, u dont have a separate json file or db for TagsEnum or anything
 
 
@@ -24,7 +26,24 @@ def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
     return content_path
 
 # 2) save thumbnail 
-# def save_thumbnail(post_id: uuid.UUID, thumbnail_file, UPLOAD_DIR: str):
+def save_thumbnail(
+    post_id: uuid.UUID,
+    thumbnail: Optional[UploadFile],
+    UPLOAD_DIR: str,
+    default_thumb: str = "data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg"
+    ):
+        if thumbnail:
+            thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
+            with thumb_path.open("wb") as f:
+                shutil.copyfileobj(thumbnail.file, f)
+            # thumbnail_url = f"/{thumb_path.as_posix()}"
+            thumbnail_url = f"{post_id}_{thumbnail.filename}" #TODO: changed to only be filename, not path
+        else:
+            default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
+            thumbnail_url = f"/{default_thumb.as_posix()}"
+            
+        return thumbnail_url
+
 # 3) create and save full combined metadata
 
 
