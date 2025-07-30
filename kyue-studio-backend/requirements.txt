@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-pydantic
+# pydantic
+pydantic==1.10.15
 python-jose
 python-multipart
 python-dotenv
