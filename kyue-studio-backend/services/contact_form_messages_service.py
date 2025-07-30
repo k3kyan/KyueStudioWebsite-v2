@@ -7,6 +7,21 @@ import boto3
 
 TEMP_DB_PATH = Path("./data/contact_form_messages.json")
 
+# Get the environment variable that was set in your CloudFormation template:
+table = boto3.resource("dynamodb").Table(os.getenv("CONTACTFORMMESSAGES_TABLE_NAME"))
+
+# # DYNAMODB_MODE = os.getenv("ENV_MODE", "aws").lower()
+# DYNAMODB_TABLE_NAME = os.getenv("CONTACTFORMMESSAGES_TABLE_NAME")
+
+# # ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+# # if ENV_MODE == "aws":
+# dynamodb = boto3.resource("dynamodb")
+# contact_table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+    
+# if not DYNAMODB_TABLE_NAME:
+#     raise ValueError("Missing CONTACTFORMMESSAGES_TABLE_NAME in environment variables")
+
+
 # - get all tags enums from schemas TagEnum (helps with populating form dropdown in frontend later)
 # tbh idk if service layer is where i should put this but idt i can put it in models, and def not schemas...
 def load_tags(): # "-> list[str]" would make sure it returns a string list

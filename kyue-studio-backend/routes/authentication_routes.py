@@ -50,17 +50,21 @@ def authenticate_user(request: OAuth2PasswordRequestForm = Depends()): #db: Sess
     # load env variables (must load after fastapi app is connected!!) // also needs to be inside a method because it makes sure the .env.local was loaded up
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
-        ADMIN_USERNAME = "tempUsernameVSCode"
-        ADMIN_PASSWORD = "tempPasswordVSCode"
+        # ADMIN_USERNAME = "tempUsernameVSCode"
+        # ADMIN_PASSWORD = "tempPasswordVSCode"
         # Load admin credentials from AWS Secrets Manager // NOT WORKING, will deal with later
-        # secrets = get_secret()
-        # ADMIN_USERNAME = secrets.get("ADMIN_USERNAME")
-        # ADMIN_PASSWORD = secrets.get("ADMIN_PASSWORD")
+        secrets = get_secret()
+        ADMIN_USERNAME = secrets.get("ADMIN_USERNAME")
+        ADMIN_PASSWORD = secrets.get("ADMIN_PASSWORD")
         
     else:
         ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
         ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
         # print ("Admin username from auth_routes.py:", ADMIN_USERNAME)
+        
+    
+    ADMIN_USERNAME = "tempUsernameVSCode"
+    ADMIN_PASSWORD = "tempPasswordVSCode"
     
     # if invalid username
     if request.username != ADMIN_USERNAME:

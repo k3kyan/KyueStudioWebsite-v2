@@ -31,8 +31,8 @@ def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         content_filename = f"{post_id}_content.md"
-        s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
-        bucket_name = os.getenv("S3_BUCKET")
+        s3 = boto3.client("s3")
+        bucket_name = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
 
         # Read file content into memory (assuming content_file is a file-like object)
         try:
@@ -63,8 +63,8 @@ def save_thumbnail(
         if ENV_MODE == "aws":
             thumbnail_filename = f"{post_id}_{thumbnail.filename}" if thumbnail else "default-thumbnail.jpg"
 
-            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
-            bucket = os.getenv("S3_BUCKET")
+            s3 = boto3.client("s3")
+            bucket = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
 
             if thumbnail:
                 try:
@@ -108,8 +108,8 @@ def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPL
                 if key in metadata_dict and metadata_dict[key] is not None:
                     metadata_dict[key] = str(metadata_dict[key])
 
-            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
             table.put_item(Item=metadata_dict)
 
         except Exception as e:
@@ -127,8 +127,8 @@ def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         try:
-            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
             response = table.scan()
             items = response.get("Items", [])
 
@@ -169,8 +169,8 @@ def load_single_post_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMe
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         try:
-            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
             response = table.get_item(Key={"id": str(post_id)})
             item = response.get("Item")
 
@@ -212,8 +212,8 @@ def delete_markdown_content(post_id: uuid.UUID, UPLOAD_DIR: str):
             return  # Nothing to delete
         
         try:
-            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
-            bucket = os.getenv("S3_BUCKET")
+            s3 = boto3.client("s3")
+            bucket = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
             s3.delete_object(Bucket=bucket, Key=f"posts/{content_filename}")
         except Exception as e:
             print(f"Error deleting markdown content from S3: {e}")
@@ -240,8 +240,8 @@ def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
 
         thumbnail_filename = Path(thumbnail_url).name
         try:
-            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
-            bucket = os.getenv("S3_BUCKET")
+            s3 = boto3.client("s3")
+            bucket = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
             s3.delete_object(Bucket=bucket, Key=f"thumbnails/{thumbnail_filename}")
         except Exception as e:
             print(f"Error deleting thumbnail from S3: {e}")
@@ -269,8 +269,8 @@ def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         try:
-            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
             table.delete_item(Key={"id": str(post_id)})
         except Exception as e:
             print(f"Error deleting metadata from DynamoDB: {e}")
