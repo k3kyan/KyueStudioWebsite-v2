@@ -26,6 +26,11 @@ ENV_MODE = os.getenv("ENV_MODE")  # optional env var
 async def get_plain_json():
     return {"message": "Hello World"}
 
+# returns plain json response, non async
+@test_router.get("/non-async")
+async def get_plain_json():
+    return {"message": "Hello World"}
+
 # returns my dynamodb table name
 @test_router.get("/dynamodb-name")
 def get_dynamodb_table_name():

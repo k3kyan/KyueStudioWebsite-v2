@@ -12,6 +12,7 @@ phases:
             - echo "Backend - Installing dependencies..."
             - cd ../kyue-studio-backend
             - pip install -r requirements.txt -t .
+            # - (cd dependencies; zip ../aws_lambda_artifact.zip -r .)
             - zip -r backend.zip .
 
     build:
