@@ -75,7 +75,7 @@ Resources:
           ENV_MODE: aws
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME: !Ref KyueStudioWebsiteS3BucketV2
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_ARN: !GetAtt KyueStudioWebsiteS3BucketV2.Arn
-          LAMBDA_API_URL: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
+          # LAMBDA_API_URL: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref ContactFormMessages
@@ -107,6 +107,13 @@ Resources:
               Resource:
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}/*
+  KyueStudioLambdaFunctionV2UrlPermission: # ???? is this valid ????
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunctionUrl
+      FunctionName: !Ref KyueStudioLambdaFunctionV2
+      Principal: "*"
+      FunctionUrlAuthType: NONE
   KyueStudioLambdaFunctionV2LogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
@@ -121,9 +128,9 @@ Resources:
 #       Name: KyueStudioLambdaFunctionUrl
 
 
-Outputs:
-  KyueStudioLambdaFunctionUrl:
-    Description: The public Function URL of the FastAPI Lambda
-    Value: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
-    Export:
-      Name: KyueStudioLambdaFunctionUrl
+# Outputs:
+#   KyueStudioLambdaFunctionUrl:
+#     Description: The public Function URL of the FastAPI Lambda
+#     Value: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
+#     Export:
+#       Name: KyueStudioLambdaFunctionUrl
