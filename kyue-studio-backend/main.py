@@ -6,7 +6,7 @@ from typing import List
 from routes.fruit_routes import fruit_router #TEMP for testing
 from fastapi.staticfiles import StaticFiles
 # from routes.login_routes import login_router
-from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes #this way can import multiple routes in one line, less bloating
+from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes, test_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
 # loading env variables
 from dotenv import load_dotenv, dotenv_values, find_dotenv
@@ -14,8 +14,8 @@ import os
 
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
 load_dotenv(".env.local") 
-# ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
-# print ("Admin username from main.py:", ADMIN_USERNAME)
+ALGORITHM = os.getenv("ALGORITHM")
+print ("Admin username from main.py:", ALGORITHM)
 
 # The FastAPI application/instance
 app = FastAPI()
@@ -58,6 +58,7 @@ app.include_router(login_routes.login_router)
 app.include_router(authentication_routes.authentication_router) #Something went wrong when i added this before, but now i restarted app and its working now so idk, but if theres a problem in the future maybe check this ...?
 app.include_router(contact_form_messages_routes.contact_form_router)
 app.include_router(blog_routes.blog_router)
+app.include_router(test_routes.test_router)
 
 
 # runs the uvicorn server
