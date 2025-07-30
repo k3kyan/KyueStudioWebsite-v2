@@ -93,6 +93,7 @@ Resources:
     Properties:
       BucketName: kyue-studio-website-content
     DeletionPolicy: Retain
+    
   ContactMessagesTable:
     Type: AWS::DynamoDB::Table
     Properties:
