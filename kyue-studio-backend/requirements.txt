@@ -6,6 +6,7 @@ python-multipart
 python-dotenv
 mangum
 boto3
+pydantic-core
 
 # pip install python-dotenv
 # pydantic[email] # pip install pydantic[email] #FAILED, TODO: will try again later...
