@@ -8,9 +8,27 @@ from fastapi.staticfiles import StaticFiles
 # from routes.login_routes import login_router
 from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
+# loading env variables
+from dotenv import load_dotenv, dotenv_values
+import os
 
 # The FastAPI application/instance
 app = FastAPI()
+
+# Load environment variables from .env file
+# TODO: SHOULD I BE USING .env.local AND .env.production INSTEAD OF .env ?????? SINCE PROD VS ENV ARE DIFF THINGS !!!! 
+# load_dotenv()
+# print (os.getenv("ADMIN_USERNAME"))
+# I like the dictionary method better
+# env_var = dotenv_values(".env")
+env_var = {
+    **dotenv_values(".env")
+    # **dotenv_values(".env.local")
+    # **dotenv_values(".env.prod")
+    # **dotenv_values(".env.shared") 
+    # **dotenv_values(".env.secret") #TODO: make sure this is secret!! gitignore...? idk
+}
+print (env_var["ADMIN_USERNAME"])
 
 # Mount static uploads
 # TODO: this doesnt load/work, idk why
