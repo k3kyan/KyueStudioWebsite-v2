@@ -1,100 +1,10 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation stack for Kyue Studio FastAPI backend
-
+Transform: AWS::Serverless-2016-10-31
 Resources:
-
-  KyueLambdaRole:
+  Role:
     Type: AWS::IAM::Role
     Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: AllowDynamoS3Logs
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:*
-                  - dynamodb:*
-                  - s3:*
-                Resource: '*'
-
-  KyueLambdaFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: kyue-fastapi-backend
-      Runtime: python3.10
-      Handler: lambda_handler.handler # file should have: handler = Mangum(app)
-      Role: !GetAtt KyueLambdaRole.Arn
-      Timeout: 30
-      MemorySize: 512
-      Code:
-        S3Bucket: kyuestudiowebsite # !Ref KyueS3Bucket #kyue-studio-s3-backend-fastapi-bucket # update this when ready to deploy #idk what to call this #!Ref KyueS3Bucket
-        S3Key: kyue-studio-backend/backend.zip # created by buildspec # backend.zip
-      Environment:
-        Variables:
-          ENV_MODE: aws #aws, local
-          DB_MODE: aws #dynamodb, json 
-          # AWS_REGION: us-east-1
-          S3_BUCKET: kyue-studio-website-content # ???
-          DYNAMODB_TABLE: kyue-blog-posts
-          API_BASE_URL: http://localhost:5173
-          MY_SECRET_KEY: "sdlkfjslf"
-          ADMIN_USERNAME: "tempUsernameCFN" #WILL CHANGE LATER, update with secrets manager later
-          ADMIN_PASSWORD: "tempPasswordCFN" #same 
-          SECRET_KEY: "725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0" #randomly generated string using command "openssl rand -hex 32"
-          ALGORITHM: "HS256"
-          ACCESS_TOKEN_EXPIRE_MINUTES: "30" #does this have to be a string ??
-
-  KyueHttpApi:
-    Type: AWS::ApiGatewayV2::Api
-    Properties:
-      Name: KyueFastApiGateway
-      ProtocolType: HTTP
-
-  KyueHttpApiStage:
-    Type: AWS::ApiGatewayV2::Stage
-    Properties:
-      ApiId: !Ref KyueHttpApi
-      StageName: prod
-      AutoDeploy: true
-
-  KyueApiIntegration:
-    Type: AWS::ApiGatewayV2::Integration
-    Properties:
-      ApiId: !Ref KyueHttpApi
-      IntegrationType: AWS_PROXY
-      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${KyueLambdaFunction.Arn}/invocations
-      PayloadFormatVersion: '2.0'
-
-  KyueApiRoute:
-    Type: AWS::ApiGatewayV2::Route
-    Properties:
-      ApiId: !Ref KyueHttpApi
-      RouteKey: ANY /{proxy+}
-      Target: !Sub integrations/${KyueApiIntegration}
-
-  KyueLambdaApiPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !Ref KyueLambdaFunction
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${KyueHttpApi}/*/*/*
-
-  KyueS3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: kyue-studio-website-content
-    DeletionPolicy: Retain
-
-  ContactMessagesTable:
+      AssumeRolePolicyDocument: <Json>
+  ContactFormMessages:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -106,41 +16,105 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
         - AttributeName: timestamp
           KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
-
-  BlogPostsTable:
+  BlogPostsMetadata:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: kyue-blog-posts-table
-      BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
         - AttributeName: timestamp
           AttributeType: S
+      BillingMode: PAY_PER_REQUEST
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+  KyueStudioWebsiteS3BucketV2:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-kyuestudi-${AWS::AccountId}
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  KyueStudioLambdaFunctionV2:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: KyueStudioLambdaFunctionV2
+      CodeUri: kyue-studio-backend/backend.zip
+      Handler: main.handler
+      Runtime: python3.10
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - '*'
+          AllowHeaders:
+            - '*'
+          ExposeHeaders:
+            - '*'
+          AllowMethods:
+            - '*'
+      Environment:
+        Variables:
+          CONTACTFORMMESSAGES_TABLE_NAME: !Ref ContactFormMessages
+          CONTACTFORMMESSAGES_TABLE_ARN: !GetAtt ContactFormMessages.Arn
+          BLOGPOSTSMETADATA_TABLE_NAME: !Ref BlogPostsMetadata
+          BLOGPOSTSMETADATA_TABLE_ARN: !GetAtt BlogPostsMetadata.Arn
+          ADMIN_USERNAME: tempUsernameEV
+          ADMIN_PASSWORD: tempPasswordEV
+          SECRET_KEY: 725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0
+          ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 30
+          ENV_MODE: aws
+          KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME: !Ref KyueStudioWebsiteS3BucketV2
+          KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_ARN: !GetAtt KyueStudioWebsiteS3BucketV2.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ContactFormMessages
+        - DynamoDBCrudPolicy:
+            TableName: !Ref BlogPostsMetadata
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}
+                - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}/*
+  KyueStudioLambdaFunctionV2LogGroup:
+    Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
-
-Outputs:
-  LambdaFunctionName:
-    Description: Lambda function name
-    Value: !Ref KyueLambdaFunction
-
-  ApiGatewayEndpoint:
-    Description: Public URL for API Gateway
-    Value: !Sub https://${KyueHttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod/
-
-  DynamoDBTable:
-    Description: DynamoDB table name
-    Value: !Ref BlogPostsTable
-
-  S3Bucket:
-    Description: S3 bucket name
-    Value: !Ref KyueS3Bucket
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${KyueStudioLambdaFunctionV2}
+  Secret:
+    Type: AWS::SecretsManager::Secret
+    Properties: {}

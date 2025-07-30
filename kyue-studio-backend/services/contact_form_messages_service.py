@@ -20,8 +20,8 @@ def load_messages() -> list[ContactFormMessageModel]: #-> list[ContactFormMessag
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         # Load from DynamoDB
-        dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-        table = dynamodb.Table(os.getenv("DYNAMODB_MSG_TABLE"))
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(os.getenv("CONTACTFORMMESSAGES_TABLE_NAME"))
         
         try:
             response = table.scan()
@@ -45,8 +45,8 @@ def save_message(message: ContactFormMessageModel) -> None:
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         # Save to DynamoDB
-        dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-        table = dynamodb.Table(os.getenv("DYNAMODB_MSG_TABLE"))
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(os.getenv("CONTACTFORMMESSAGES_TABLE_NAME"))
 
         try:
             item = message.to_dict()
@@ -74,8 +74,8 @@ def delete_message(email: str, subject: str): #-> bool ???
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if ENV_MODE == "aws":
         try:
-            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
-            table = dynamodb.Table(os.getenv("DYNAMODB_MSG_TABLE"))
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table(os.getenv("CONTACTFORMMESSAGES_TABLE_NAME"))
 
             # First, scan to find the message to delete
             response = table.scan()
