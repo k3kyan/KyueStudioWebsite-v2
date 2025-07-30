@@ -114,7 +114,7 @@ Resources:
   BlogPostsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: kyue-blog-posts
+      TableName: kyue-blog-posts-table
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id
