@@ -14,10 +14,8 @@ import os
 
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
 load_dotenv(".env.local") 
-
-
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
-print ("Admin username from main.py:", ADMIN_USERNAME)
+# ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+# print ("Admin username from main.py:", ADMIN_USERNAME)
 
 # The FastAPI application/instance
 app = FastAPI()

@@ -1,0 +1,18 @@
+phases:
+  install:
+    runtime-versions:
+      python: 3.10
+  build:
+    commands:
+      - pip install -r requirements.txt -t .
+      - zip -r backend_lambda_artifact.zip .
+      # - zip backend_lambda_artifact.zip -u main.py
+artifacts:
+  files:
+    - backend_lambda_artifact.zip
+
+
+
+# TODO: Define lambda environment variables here in cloudformation
+
+# 

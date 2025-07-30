@@ -1,0 +1,21 @@
+# TODO: FIRST: USE AWS Toolkit for VS Code
+# has support for
+  # visualizing cloudformation templates
+  # running SAM for local lambda testing (?? would i use this ???)
+  # AUTHORING TEMPLATES WITH AUTOCOMPLETE + SNIPPETS !!!!!
+
+
+
+
+
+
+# IAM Role
+# Lambda function
+  # lambda environment variables
+# api gateway
+# dynamodb table
+# s3 bucket (for content) (frontend build will be in a separate s3 bucket since its already created....? do i need to configure s3 bucket permissions here so both buckets can access each other...?)
+
+
+
+# must create secrets manager environmental variables separately
