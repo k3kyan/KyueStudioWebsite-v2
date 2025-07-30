@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from jose import jwt
 import os
 # Purpose of this file: generate jwt token
+# AWS: Doesn't need boto3 changes since it doesn't interact with any databases, and the environment variables will 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") # endpoint for token retrieval // this says "this tokenUrl will be required to receive token for our schema"
 
@@ -17,13 +18,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") # endpoint for token retr
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     SECRET_KEY = os.getenv("SECRET_KEY")
     ALGORITHM = os.getenv("ALGORITHM")
-    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

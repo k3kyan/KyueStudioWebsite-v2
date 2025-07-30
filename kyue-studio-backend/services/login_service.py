@@ -4,10 +4,16 @@ from models.login_models import Login
 # TODO: also import models and database ?? idk, didnt fully follow Ashutosh Pawar's Udemy course so idk, might be important for AWS..?
 # from passlib.context import CryptContext # TODO: to decode hashed password and compare it with the password from request // which is not coded yet so prob dont need this now
 # actually i wont need to hash or decrypt a password bc it'll be handled elsewhere outside of local, so just use substitute data for now ig
+import os
+
 
 
 
 def get_user_from_db(request: Login):
+    # lowkey idek if i need this file but heres the env variables in case i do
+    ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
+    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+    
     # TODO: replace with logic to get info from actual database once hooked up to aws
     username = "tempUsername"
     # TODO?: potentially decrypt the password if i do that in the future

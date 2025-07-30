@@ -30,20 +30,27 @@ Resources:
     Properties:
       FunctionName: kyue-fastapi-backend
       Runtime: python3.10
-      Handler: lambda_handler.handler # your file should have: handler = Mangum(app)
+      Handler: lambda_handler.handler # file should have: handler = Mangum(app)
       Role: !GetAtt KyueLambdaRole.Arn
       Timeout: 30
       MemorySize: 512
       Code:
-        S3Bucket: your-code-bucket-name # update this when ready to deploy
+        S3Bucket: kyue-studio-s3-backend-fastapi-bucket # update this when ready to deploy #idk what to call this
         S3Key: backend.zip # created by buildspec
       Environment:
         Variables:
-          ENV_MODE: aws
-          DB_MODE: aws
+          ENV_MODE: aws #aws, local
+          DB_MODE: aws #dynamodb, json 
           AWS_REGION: us-east-1
           S3_BUCKET: kyue-post-content
           DYNAMODB_TABLE: kyue-blog-posts
+          API_BASE_URL: http://localhost:5173
+          MY_SECRET_KEY: "sdlkfjslf"
+          ADMIN_USERNAME: "tempUsernameEV" #WILL CHANGE LATER, update with secrets manager later
+          ADMIN_PASSWORD: "tempPasswordEV" #same 
+          SECRET_KEY: "725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0" #randomly generated string using command "openssl rand -hex 32"
+          ALGORITHM: "HS256"
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30" #does this have to be a string ??
 
   KyueHttpApi:
     Type: AWS::ApiGatewayV2::Api

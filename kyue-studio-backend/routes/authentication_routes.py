@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm 
 from auth import auth_handler
 import os #to access .env.local environment variables
+# AWS: no boto3 needed since it doesnt i/o with database
 
 authentication_router = APIRouter(
     # prefix="/auth",
