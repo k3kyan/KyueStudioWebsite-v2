@@ -35,14 +35,14 @@ Resources:
       Timeout: 30
       MemorySize: 512
       Code:
-        S3Bucket: kyue-studio-s3-backend-fastapi-bucket # update this when ready to deploy #idk what to call this
-        S3Key: backend.zip # created by buildspec
+        S3Bucket: kyuestudiowebsite # !Ref KyueS3Bucket #kyue-studio-s3-backend-fastapi-bucket # update this when ready to deploy #idk what to call this #!Ref KyueS3Bucket
+        S3Key: kyue-studio-backend/backend.zip # created by buildspec # backend.zip
       Environment:
         Variables:
           ENV_MODE: aws #aws, local
           DB_MODE: aws #dynamodb, json 
           # AWS_REGION: us-east-1
-          S3_BUCKET: kyue-studio-website-content
+          S3_BUCKET: kyue-studio-website-content # ???
           DYNAMODB_TABLE: kyue-blog-posts
           API_BASE_URL: http://localhost:5173
           MY_SECRET_KEY: "sdlkfjslf"
