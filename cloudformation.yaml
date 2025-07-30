@@ -107,8 +107,6 @@ Resources:
           KeyType: HASH
         - AttributeName: timestamp
           KeyType: RANGE
-        - AttributeName: timestamp
-          KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
 
