@@ -12,6 +12,8 @@ phases:
             - echo "Backend - Installing dependencies..."
             - cd ../kyue-studio-backend
             - pip install -r requirements.txt -t .
+            # override pydantic with a lambda-compatible binary build
+            - pip install --platform manylinux2014_aarch64 --target=./ --implementation cp --python-version 3.11 --only-binary=:all: --upgrade pydantic==2.8.2
             # - (cd dependencies; zip ../aws_lambda_artifact.zip -r .)
             - zip -r backend.zip .
 
