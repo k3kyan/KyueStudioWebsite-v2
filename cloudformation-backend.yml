@@ -1,21 +1,34 @@
 # TODO: FIRST: USE AWS Toolkit for VS Code
 # has support for
   # visualizing cloudformation templates
-  # running SAM for local lambda testing (?? would i use this ???)
+  # running SAM for local lambda testing // KINDA USEFUL LOOKING, ALSO ITS FREE !!! 
   # AUTHORING TEMPLATES WITH AUTOCOMPLETE + SNIPPETS !!!!!
+# LATER: RESEARCH: maybe i can test my code with SAM after I deploy this raw to aws for the first time, since i dont wanna set up a whole SAM system right now. I can try after since bringing back the local-json-saving code would be a pain
 
 
 
+# Names
 
 
 
 # IAM Role
+  # access with dynamodb, s3
 # Lambda function
   # lambda environment variables
 # api gateway
-# dynamodb table
+# dynamodb table (probably multiple tables..? contact-form-messages, blog-posts, etc... )
+  # DeletionPolicy: Retain
 # s3 bucket (for content) (frontend build will be in a separate s3 bucket since its already created....? do i need to configure s3 bucket permissions here so both buckets can access each other...?)
-
+  # S3 bucket could include the frontend build, but I've already hooked that up to the cicd manually so idk if it'll work..... prob should use another s3 bucket idk
 
 
 # must create secrets manager environmental variables separately
+
+
+# TODO: do i have to tell codebuild to follow this buildspec.yml file too? manually?
+
+
+
+# TODO: Define lambda environment variables here in cloudformation
+
+# 

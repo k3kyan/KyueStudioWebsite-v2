@@ -4,10 +4,14 @@ phases:
     install:
         runtime-versions:
             nodejs: latest
+            python: latest #is it valid to have both of these here ??
         commands:
-            - echo "Installing dependencies..."
+            - echo "Frontend - Installing dependencies..."
             - cd kyue-studio-website-v3
             - npm install
+            - echo "Backend - Installing dependencies..."
+            - pip install -r requirements.txt -t .
+            - zip -r backend_lambda_artifact.zip .
 
     build:
         commands:
@@ -17,5 +21,6 @@ phases:
 artifacts:
     files:
         - '**/*'
-    base-directory: kyue-studio-website-v3/dist
+        - backend_lambda_artifact.zip
+    base-directory: kyue-studio-website-v3/dist # ?? will this affect the backend_lambda_artifact.zip ????
 

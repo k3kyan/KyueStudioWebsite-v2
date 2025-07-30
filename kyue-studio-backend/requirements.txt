@@ -4,6 +4,8 @@ pydantic
 python-jose
 python-multipart
 python-dotenv
+mangum
+
 # pip install python-dotenv
 # pydantic[email] # pip install pydantic[email] #FAILED, TODO: will try again later...
 
