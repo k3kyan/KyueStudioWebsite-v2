@@ -7,7 +7,8 @@ from typing import Optional, List
 from fastapi.logger import logger
 from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSchema
 # from models.blog_models import BlogPostMetadataModel #no need to import TagsEnum bc it doesnt exist in models, u dont have a separate json file or db for TagsEnum or anything
-
+import os
+import boto3
 
 
 # is this where the schemas get sorted into different models / schemas ????
@@ -27,10 +28,29 @@ from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSch
 # async def create_post(
 # 1) save markdown content 
 def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
-    content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
-    with content_path.open("wb") as f:
-        shutil.copyfileobj(content_file, f)
-    return content_path
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        content_filename = f"{post_id}_content.md"
+        s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
+        bucket_name = os.getenv("S3_BUCKET")
+
+        # Read file content into memory (assuming content_file is a file-like object)
+        try:
+            s3.put_object(
+                Bucket=bucket_name,
+                Key=f"posts/{content_filename}",  # Customize prefix if needed
+                Body=content_file,
+                ContentType="text/markdown"
+            )
+            return f"posts/{content_filename}"  # return S3 key
+        except Exception as e:
+            print(f"Error uploading markdown to S3: {e}")
+            raise
+    else:
+        content_path = Path(UPLOAD_DIR) / "blog_content"/ f"{post_id}_content.md"
+        with content_path.open("wb") as f:
+            shutil.copyfileobj(content_file, f)
+        return content_path
 
 # 2) save thumbnail 
 def save_thumbnail(
@@ -39,48 +59,131 @@ def save_thumbnail(
     UPLOAD_DIR: str,
     default_thumb: str = "data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg"
     ):
-        if thumbnail:
-            thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
-            with thumb_path.open("wb") as f:
-                shutil.copyfileobj(thumbnail.file, f)
-            # thumbnail_url = f"/{thumb_path.as_posix()}"
-            thumbnail_url = f"{post_id}_{thumbnail.filename}" #TODO: changed to only be filename, not path
-        else:
-            default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
-            thumbnail_url = f"/{default_thumb.as_posix()}"
+        ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+        if ENV_MODE == "aws":
+            thumbnail_filename = f"{post_id}_{thumbnail.filename}" if thumbnail else "default-thumbnail.jpg"
+
+            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
+            bucket = os.getenv("S3_BUCKET")
+
+            if thumbnail:
+                try:
+                    s3.put_object(
+                        Bucket=bucket,
+                        Key=f"thumbnails/{thumbnail_filename}",
+                        Body=thumbnail.file,
+                        ContentType=thumbnail.content_type
+                    )
+                    return f"thumbnails/{thumbnail_filename}"
+                except Exception as e:
+                    print(f"Error uploading thumbnail to S3: {e}")
+                    raise
+            else:
+                # Optional: You could point to a known public default in S3
+                return "thumbnails/default-thumbnail.jpg"
             
-        return thumbnail_url
+        else:
+            if thumbnail:
+                thumb_path = Path(UPLOAD_DIR) / "blog_thumbnails" / f"{post_id}_{thumbnail.filename}"
+                with thumb_path.open("wb") as f:
+                    shutil.copyfileobj(thumbnail.file, f)
+                # thumbnail_url = f"/{thumb_path.as_posix()}"
+                thumbnail_url = f"{post_id}_{thumbnail.filename}" #TODO: changed to only be filename, not path
+            else:
+                default_thumb = Path("data/content/blog-posts/blog_thumbnails/default-thumbnail.jpg")
+                thumbnail_url = f"/{default_thumb.as_posix()}"
+                
+            return thumbnail_url
 
 # 3) create and save full combined metadata
 def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPLOAD_DIR: str):
-    metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
-    with metadata_path.open("w", encoding="utf-8") as f:
-        json.dump(full_metadata.model_dump(), f, indent=2, default=str)
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        metadata_dict = full_metadata.model_dump()
+        metadata_dict["id"] = str(post_id)  # Ensure ID is string
+        
+        try:
+            # Convert datetime fields to strings
+            for key in ["date_created", "date_updated"]:
+                if key in metadata_dict and metadata_dict[key] is not None:
+                    metadata_dict[key] = str(metadata_dict[key])
+
+            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
+            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            table.put_item(Item=metadata_dict)
+
+        except Exception as e:
+            print(f"Error saving metadata to DynamoDB: {e}")
+            raise
+    else:
+        metadata_path = Path(UPLOAD_DIR) / f"blog_metadata/{post_id}_metadata.json"
+        with metadata_path.open("w", encoding="utf-8") as f:
+            json.dump(full_metadata.model_dump(), f, indent=2, default=str)
 
 
 # @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 # async def get_all_blog_posts():
 def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
-    metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
-    all_posts = []
-
-    for file in metadata_dir.glob("*.json"):
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
         try:
-            with file.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-                post = BlogPostMetadataSchema(**data)
-                all_posts.append(post)
+            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
+            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            response = table.scan()
+            items = response.get("Items", [])
+
+            all_posts = []
+            for item in items:
+                try:
+                    post = BlogPostMetadataSchema(**item)
+                    all_posts.append(post)
+                except Exception as e:
+                    logger.warning(f"Skipped DynamoDB item due to error: {e}")
+            return all_posts
+
         except Exception as e:
-            logger.warning(f"Skipped file {file.name} due to error: {e}")
-            
-    return all_posts
-# 1. since this will be different in dynamodb, just lowkey put all of it into one function that returns all the posts
+            logger.error(f"Error scanning DynamoDB: {e}")
+            return []
+
+    else:
+        metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
+        all_posts = []
+
+        for file in metadata_dir.glob("*.json"):
+            try:
+                with file.open("r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    post = BlogPostMetadataSchema(**data)
+                    all_posts.append(post)
+            except Exception as e:
+                logger.warning(f"Skipped file {file.name} due to error: {e}")
+                
+        return all_posts
+    # 1. since this will be different in dynamodb, just lowkey put all of it into one function that returns all the posts
 
 
 # @blog_router.get("/post/{post_id}", response_model=BlogPostMetadataSchema)
 # async def get_post_metadata(post_id: uuid.UUID):
 # 1. method to get the metadata (keep inside try catch block)
 def load_single_post_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMetadataSchema:
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        try:
+            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
+            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            response = table.get_item(Key={"id": str(post_id)})
+            item = response.get("Item")
+
+            if not item:
+                raise HTTPException(status_code=404, detail="Post metadata not found")
+
+            return BlogPostMetadataSchema(**item)
+
+        except Exception as e:
+            print(f"Error loading metadata from DynamoDB: {e}")
+            raise HTTPException(status_code=500, detail="Failed to load metadata from DynamoDB")
+
+    else:
         metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
 
         if not metadata_path.exists():
@@ -100,38 +203,80 @@ def load_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMetadataSchema
 
 # 1. method to delete content markdown file (parameter is post_id)
 def delete_markdown_content(post_id: uuid.UUID, UPLOAD_DIR: str):
-    # load specific post's metadata so we can find what to delete
-    metadata = load_metadata(post_id, UPLOAD_DIR)
-    
-    # delete content markdown file
-    # content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
-    content_path = Path(UPLOAD_DIR) / "blog_content" / metadata.content_filename
-    if content_path.exists():
-        content_path.unlink()
-    # return "success" maybe?
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        metadata = load_metadata(post_id, UPLOAD_DIR)
+        content_filename = metadata.content_filename
+        
+        if not content_filename:
+            return  # Nothing to delete
+        
+        try:
+            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
+            bucket = os.getenv("S3_BUCKET")
+            s3.delete_object(Bucket=bucket, Key=f"posts/{content_filename}")
+        except Exception as e:
+            print(f"Error deleting markdown content from S3: {e}")
+            raise
+    else:
+        # load specific post's metadata so we can find what to delete
+        metadata = load_metadata(post_id, UPLOAD_DIR)
+        
+        # delete content markdown file
+        # content_path = Path(UPLOAD_DIR) / "blog_content" / metadata["content_filename"]
+        content_path = Path(UPLOAD_DIR) / "blog_content" / metadata.content_filename
+        if content_path.exists():
+            content_path.unlink()
+        # return "success" maybe?
             
 # 2. method to delete thumbnail if it's not the default (parameter is post_id)
 def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
-    # load specific post's metadata so we can find what to delete
-    metadata = load_metadata(post_id, UPLOAD_DIR)
-    
-    # delete thumbnail
-    # thumbnail_url = metadata.get("thumbnail_url", "")
-    thumbnail_url = getattr(metadata, "thumbnail_url", "")
-    if (
-        thumbnail_url
-        and "default-thumbnail" not in thumbnail_url
-        and "blog_thumbnails" in thumbnail_url
-    ):
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        metadata = load_metadata(post_id, UPLOAD_DIR)
+        thumbnail_url = getattr(metadata, "thumbnail_url", "")
+        if not thumbnail_url or "default-thumbnail" in thumbnail_url:
+            return  # Nothing to delete
+
         thumbnail_filename = Path(thumbnail_url).name
-        thumbnail_path = Path(UPLOAD_DIR) / "blog_thumbnails" / thumbnail_filename
-        if thumbnail_path.exists():
-            thumbnail_path.unlink()
-    # return "success" maybe?
+        try:
+            s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
+            bucket = os.getenv("S3_BUCKET")
+            s3.delete_object(Bucket=bucket, Key=f"thumbnails/{thumbnail_filename}")
+        except Exception as e:
+            print(f"Error deleting thumbnail from S3: {e}")
+            raise
+    else:
+        # load specific post's metadata so we can find what to delete
+        metadata = load_metadata(post_id, UPLOAD_DIR)
+        
+        # delete thumbnail
+        # thumbnail_url = metadata.get("thumbnail_url", "")
+        thumbnail_url = getattr(metadata, "thumbnail_url", "")
+        if (
+            thumbnail_url
+            and "default-thumbnail" not in thumbnail_url
+            and "blog_thumbnails" in thumbnail_url
+        ):
+            thumbnail_filename = Path(thumbnail_url).name
+            thumbnail_path = Path(UPLOAD_DIR) / "blog_thumbnails" / thumbnail_filename
+            if thumbnail_path.exists():
+                thumbnail_path.unlink()
+        # return "success" maybe?
 
 # 3. method to delete the metadata file  (parameter is post_id)
 def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
-    # metadata = load_metadata(post_id, UPLOAD_DIR)
-    metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
-    metadata_path.unlink()
-    # return "success" maybe?
+    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if ENV_MODE == "aws":
+        try:
+            dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
+            table = dynamodb.Table(os.getenv("DYNAMODB_TABLE"))
+            table.delete_item(Key={"id": str(post_id)})
+        except Exception as e:
+            print(f"Error deleting metadata from DynamoDB: {e}")
+            raise
+    else:
+        # metadata = load_metadata(post_id, UPLOAD_DIR)
+        metadata_path = Path(UPLOAD_DIR) / "blog_metadata" / f"{post_id}_metadata.json"
+        metadata_path.unlink()
+        # return "success" maybe?
