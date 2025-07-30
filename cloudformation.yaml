@@ -42,7 +42,7 @@ Resources:
           ENV_MODE: aws #aws, local
           DB_MODE: aws #dynamodb, json 
           # AWS_REGION: us-east-1
-          S3_BUCKET: kyue-post-content
+          S3_BUCKET: kyue-studio-website-content
           DYNAMODB_TABLE: kyue-blog-posts
           API_BASE_URL: http://localhost:5173
           MY_SECRET_KEY: "sdlkfjslf"
