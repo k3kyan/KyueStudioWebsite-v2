@@ -41,7 +41,7 @@ Resources:
         Variables:
           ENV_MODE: aws #aws, local
           DB_MODE: aws #dynamodb, json 
-          AWS_REGION: us-east-1
+          # AWS_REGION: us-east-1
           S3_BUCKET: kyue-post-content
           DYNAMODB_TABLE: kyue-blog-posts
           API_BASE_URL: http://localhost:5173
