@@ -10,8 +10,9 @@ phases:
             - cd kyue-studio-website-v3
             - npm install
             - echo "Backend - Installing dependencies..."
+            - cd ../kyue-studio-backend
             - pip install -r requirements.txt -t .
-            - zip -r backend_lambda_artifact.zip .
+            - zip -r backend.zip .
 
     build:
         commands:
@@ -20,7 +21,6 @@ phases:
             
 artifacts:
     files:
-        - '**/*'
-        - backend_lambda_artifact.zip
-    base-directory: kyue-studio-website-v3/dist # ?? will this affect the backend_lambda_artifact.zip ????
+        - kyue-studio-website-v3/dist/**/*
+        - kyue-studio-backend/backend.zip
 

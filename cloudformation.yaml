@@ -80,7 +80,13 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${KyueHttpApi}/*/*/*
-  ContactFormMessagesTable:
+
+  KyueS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: kyue-studio-website-content
+    DeletionPolicy: Retain
+  ContactMessagesTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -94,10 +100,12 @@ Resources:
           KeyType: HASH
         - AttributeName: timestamp
           KeyType: RANGE
+        - AttributeName: timestamp
+          KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
 
-  BlogPostsMetadataTable:
+  BlogPostsTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: kyue-blog-posts
@@ -111,17 +119,6 @@ Resources:
         - AttributeName: id
           KeyType: HASH
     DeletionPolicy: Retain
-  ContactFormMessages:
-    Properties:
-      KeySchema:
-        - AttributeName: timestamp
-          KeyType: RANGE
-
-  S3BucketContent:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: kyue-studio-website-content
-    DeletionPolicy: Retain
 
 Outputs:
   LambdaFunctionName:
@@ -134,8 +131,8 @@ Outputs:
 
   DynamoDBTable:
     Description: DynamoDB table name
-    Value: !Ref BlogPostsMetadataTable
+    Value: !Ref BlogPostsTable
 
   S3Bucket:
     Description: S3 bucket name
-    Value: !Ref S3BucketContent
+    Value: !Ref KyueS3Bucket
