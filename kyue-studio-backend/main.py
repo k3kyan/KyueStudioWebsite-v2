@@ -11,6 +11,7 @@ from auth import auth_handler
 # loading env variables
 from dotenv import load_dotenv, dotenv_values, find_dotenv
 import os
+from mangum import Mangum
 
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
 load_dotenv(".env.local") 
@@ -60,6 +61,7 @@ app.include_router(contact_form_messages_routes.contact_form_router)
 app.include_router(blog_routes.blog_router)
 app.include_router(test_routes.test_router)
 
+handler = Mangum(app)
 
 # runs the uvicorn server
 # runs the application for us
