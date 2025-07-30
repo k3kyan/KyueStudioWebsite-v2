@@ -24,4 +24,5 @@ artifacts:
     files:
         - kyue-studio-website-v3/dist/**/*
         - kyue-studio-backend/backend.zip
+        - cloudformation.yaml
 
