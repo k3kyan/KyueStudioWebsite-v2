@@ -1,0 +1,21 @@
+# # for AWS codebuild
+
+# phases:
+#   install:
+#     runtime-versions:
+#       python: 3.10
+#   build:
+#     commands:
+#       - pip install -r requirements.txt -t .
+#       - zip -r backend_lambda_artifact.zip .
+#       # - zip backend_lambda_artifact.zip -u main.py
+#       # - zip backend_lambda_artifact.zip -u lambda_handler.py
+# artifacts:
+#   files:
+#     - backend_lambda_artifact.zip
+
+
+
+# # TODO: Define lambda environment variables here in cloudformation
+
+# # NOT USING THIS FILE BECAUSE THEN I'D HAVE TO HAVE TWO CODEBUILD PROJECTS, WHICH IS MORE COSTLY AND ALSO UNECESSARY TBH

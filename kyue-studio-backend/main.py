@@ -8,6 +8,14 @@ from fastapi.staticfiles import StaticFiles
 # from routes.login_routes import login_router
 from routes import fruit_routes, login_routes, authentication_routes, contact_form_messages_routes, blog_routes #this way can import multiple routes in one line, less bloating
 from auth import auth_handler
+# loading env variables
+from dotenv import load_dotenv, dotenv_values, find_dotenv
+import os
+
+# loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
+load_dotenv(".env.local") 
+# ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+# print ("Admin username from main.py:", ADMIN_USERNAME)
 
 # The FastAPI application/instance
 app = FastAPI()

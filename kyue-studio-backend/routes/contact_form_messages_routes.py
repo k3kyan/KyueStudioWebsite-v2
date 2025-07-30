@@ -3,6 +3,7 @@ from schemas.contact_form_messages_schemas import ContactFormMessageSchema, TagE
 from services.contact_form_messages_service import load_tags, load_messages, save_message, delete_message
 from typing import List
 from models.contact_form_messages_models import ContactFormMessageModel #IMPORTANT: PURELY HERE FOR CONVERSION METHODS !!! !!!!!!!
+# AWS: No need to change to boto3, all the data i/o is taken care of in the service methods (so those need to change, but not this file)
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme

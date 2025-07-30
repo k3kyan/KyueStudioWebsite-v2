@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from fastapi.logger import logger
 from services.blog_service import save_markdown_content, save_thumbnail, save_metadata, load_posts_metadata, load_single_post_metadata, delete_markdown_content, delete_thumbnail, delete_metadata #add more
+# AWS: i THINK i dont need to change anything to boto3 because all the data i/o is taken care of in the service methods
 
 #For Authorization
 from auth.auth_handler import oauth2_scheme
@@ -36,7 +37,7 @@ async def create_post(
     try:
         # Parse metadata
         print(f"Raw metadata: {metadata}")
-        metadata_dict = json.loads(metadata)
+        metadata_dict = json.loads(metadata) #NOT related to i/o, so no need to change for AWS. It's just parsing a json-formmatted string from a form field and converting to a python dictionary
         blog_meta = BlogPostMetadataPOSTSchema(**metadata_dict)
         
         # Generate metadata info not from frontend

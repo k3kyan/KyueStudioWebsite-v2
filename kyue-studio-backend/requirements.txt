@@ -3,6 +3,11 @@ uvicorn
 pydantic
 python-jose
 python-multipart
+python-dotenv
+mangum
+boto3
+
+# pip install python-dotenv
 # pydantic[email] # pip install pydantic[email] #FAILED, TODO: will try again later...
 
 # separately, before installing these (since these dependencies should be bundled in a python virtual environment): python venv virtual environment

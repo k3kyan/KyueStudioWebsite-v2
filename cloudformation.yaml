@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation stack for Kyue Studio FastAPI backend
+
+Resources:
+
+  KyueLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AllowDynamoS3Logs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                  - dynamodb:*
+                  - s3:*
+                Resource: '*'
+
+  KyueLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: kyue-fastapi-backend
+      Runtime: python3.10
+      Handler: lambda_handler.handler # file should have: handler = Mangum(app)
+      Role: !GetAtt KyueLambdaRole.Arn
+      Timeout: 30
+      MemorySize: 512
+      Code:
+        S3Bucket: kyue-studio-s3-backend-fastapi-bucket # update this when ready to deploy #idk what to call this
+        S3Key: backend.zip # created by buildspec
+      Environment:
+        Variables:
+          ENV_MODE: aws #aws, local
+          DB_MODE: aws #dynamodb, json 
+          AWS_REGION: us-east-1
+          S3_BUCKET: kyue-post-content
+          DYNAMODB_TABLE: kyue-blog-posts
+          API_BASE_URL: http://localhost:5173
+          MY_SECRET_KEY: "sdlkfjslf"
+          ADMIN_USERNAME: "tempUsernameCFN" #WILL CHANGE LATER, update with secrets manager later
+          ADMIN_PASSWORD: "tempPasswordCFN" #same 
+          SECRET_KEY: "725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0" #randomly generated string using command "openssl rand -hex 32"
+          ALGORITHM: "HS256"
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30" #does this have to be a string ??
+
+  KyueHttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: KyueFastApiGateway
+      ProtocolType: HTTP
+
+  KyueHttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref KyueHttpApi
+      StageName: prod
+      AutoDeploy: true
+
+  KyueApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref KyueHttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${KyueLambdaFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  KyueApiRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref KyueHttpApi
+      RouteKey: ANY /{proxy+}
+      Target: !Sub integrations/${KyueApiIntegration}
+
+  KyueLambdaApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref KyueLambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${KyueHttpApi}/*/*/*
+
+  KyueS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: kyue-studio-website-content
+    DeletionPolicy: Retain
+  ContactMessagesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+        - AttributeName: timestamp
+          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  BlogPostsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: kyue-blog-posts
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+    DeletionPolicy: Retain
+
+Outputs:
+  LambdaFunctionName:
+    Description: Lambda function name
+    Value: !Ref KyueLambdaFunction
+
+  ApiGatewayEndpoint:
+    Description: Public URL for API Gateway
+    Value: !Sub https://${KyueHttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod/
+
+  DynamoDBTable:
+    Description: DynamoDB table name
+    Value: !Ref BlogPostsTable
+
+  S3Bucket:
+    Description: S3 bucket name
+    Value: !Ref KyueS3Bucket
