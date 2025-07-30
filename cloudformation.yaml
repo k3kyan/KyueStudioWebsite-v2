@@ -46,7 +46,7 @@ Resources:
         - ResourceName: KyueStudioLambdaFunctionV2
       CodeUri: s3://kyuestudiowebsite/kyue-studio-backend/backend.zip # ?? !Ref KyueStudioWebsiteS3BucketV2 ??
       Handler: main.handler
-      Runtime: python3.10
+      Runtime: python3.13
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
@@ -55,6 +55,7 @@ Resources:
         Cors:
           AllowOrigins:
             - '*'
+          # MAY OR MAY NOT NEED THESE ??!!??!?! Works on manually made lambda function with only "Allow origin" = *, so these other cors configs may not be needed. delete if something goes wrong maybe.
           AllowHeaders:
             - '*'
           ExposeHeaders:
