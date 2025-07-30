@@ -1,9 +1,5 @@
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  Role:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument: <Json>
   ContactFormMessages:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -16,8 +12,6 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
         - AttributeName: timestamp
           KeyType: RANGE
       StreamSpecification:
@@ -34,12 +28,14 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
   KyueStudioWebsiteS3BucketV2:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${AWS::StackName}-kyuestudi-${AWS::AccountId}
+      BucketName: !Sub kyuestudio-content-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
   KyueStudioLambdaFunctionV2:
@@ -48,7 +44,7 @@ Resources:
       Description: !Sub
         - Stack ${AWS::StackName} Function ${ResourceName}
         - ResourceName: KyueStudioLambdaFunctionV2
-      CodeUri: kyue-studio-backend/backend.zip
+      CodeUri: s3://kyuestudiowebsite/kyue-studio-backend/backend.zip # ?? !Ref KyueStudioWebsiteS3BucketV2 ??
       Handler: main.handler
       Runtime: python3.10
       MemorySize: 3008
@@ -79,6 +75,7 @@ Resources:
           ENV_MODE: aws
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME: !Ref KyueStudioWebsiteS3BucketV2
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_ARN: !GetAtt KyueStudioWebsiteS3BucketV2.Arn
+          # LAMBDA_API_URL
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref ContactFormMessages
@@ -115,6 +112,10 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${KyueStudioLambdaFunctionV2}
-  Secret:
-    Type: AWS::SecretsManager::Secret
-    Properties: {}
+
+# Outputs:
+#   LambdaFunctionUrl:
+#     Description: Public URL for FastAPI Lambda function
+#     Value: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
+#     Export:
+#       Name: KyueStudioLambdaFunctionUrl
