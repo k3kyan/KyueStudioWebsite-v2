@@ -8,6 +8,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 // USE DELETE ENDPOINT HERE!!! also validate that only author can delete it in frontend
 
 const BlogPostPage = () => {
+    const baseURL = "https://hioroxjfpm52qt6flna72nv2gm0ycjuy.lambda-url.us-east-2.on.aws";
     const { post_id } = useParams(); // fetched parameters must match varname in the route <Route path="/blog/post/:post_id
     const [post, setPost] = useState(null);
     const [content, setContent] = useState("");
@@ -25,7 +26,7 @@ const BlogPostPage = () => {
         const data = res.data;
         setPost(data);
 
-        const contentRes = await fetch(`http://localhost:8000/content/${data.content_filename}`); // TODO: replace with a better localhost idk why this doesnt work
+        const contentRes = await fetch(`${baseURL}/content/${data.content_filename}`); // TODO: replace with a better localhost idk why this doesnt work
         // const contentRes = await fetch(`http://localhost:8000/content/0380b2d8-187c-4403-a0fa-7a0141d5d0eb_content.md`); // HARDCODED, WORKS // idk how to make it dynamic, might be an issue for aws 
         // const text = await contentRes.text();
         // const text = contentRes.text();
@@ -74,7 +75,8 @@ const BlogPostPage = () => {
 
 
       <h1>{post.title}</h1>
-      <img src={'http://localhost:8000/thumbnails/' + post.thumbnail_url} alt={post.title} /> {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
+      <img src={baseURL + '/thumbnails/' + post.thumbnail_url} alt={post.title} /> {/* TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
+      {/* <img src={'http://localhost:8000/thumbnails/' + post.thumbnail_url} alt={post.title} /> TODO: IMPORTANT: NEED TO CHANGE THIS LOCALHOST !!!! */}
       <p>{post.summary}</p>
       <div>
         <strong>Tags:</strong> {post.tags.join(", ")}

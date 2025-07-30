@@ -13,6 +13,7 @@ const AuthorizationContext = createContext();
 // provider component
 export const AuthorizationProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token'));
+    const baseURL = "https://hioroxjfpm52qt6flna72nv2gm0ycjuy.lambda-url.us-east-2.on.aws/"
 
     const login = (token) => {
         localStorage.setItem('token', token);
