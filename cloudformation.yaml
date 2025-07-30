@@ -46,8 +46,8 @@ Resources:
           DYNAMODB_TABLE: kyue-blog-posts
           API_BASE_URL: http://localhost:5173
           MY_SECRET_KEY: "sdlkfjslf"
-          ADMIN_USERNAME: "tempUsernameEV" #WILL CHANGE LATER, update with secrets manager later
-          ADMIN_PASSWORD: "tempPasswordEV" #same 
+          ADMIN_USERNAME: "tempUsernameCFN" #WILL CHANGE LATER, update with secrets manager later
+          ADMIN_PASSWORD: "tempPasswordCFN" #same 
           SECRET_KEY: "725898e2e6208a094e60f59ebf97b32940f4902b1ffe606be5f67dc89cf74ee0" #randomly generated string using command "openssl rand -hex 32"
           ALGORITHM: "HS256"
           ACCESS_TOKEN_EXPIRE_MINUTES: "30" #does this have to be a string ??
