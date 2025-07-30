@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm 
 from auth import auth_handler
+import os #to access .env.local environment variables
 
 authentication_router = APIRouter(
     # prefix="/auth",
@@ -12,15 +13,16 @@ authentication_router = APIRouter(
 # TODO: LATER: will need another depends parameter for getting user and verifying that password is correct (tho idk how that works with aws secrets manager ???)
 @authentication_router.post("/token")
 def authenticate_user(request: OAuth2PasswordRequestForm = Depends()): #db: Session = Depends(get_db))
-    # TODO: TEMP:  Get user from db (idk if this applies to me)
-    username = "tempUsername" # TODO: replace with: username = query from db
+    # load env variables (must load after fastapi app is connected!!) // also needs to be inside a method because it makes sure the .env.local was loaded up
+    ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+    # print ("Admin username from auth_routes.py:", ADMIN_USERNAME)
+    
     # if invalid username
-    if request.username != username:
+    if request.username != ADMIN_USERNAME:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
     
-    # TODO: TEMP: Check if password of the user is correct
-    password = "tempPassword" # TODO: replace with: password = query from db / from the found username ???
-    if request.password != password: #did not decrypt/verify/hash/etc like in Catalin Stefan's tutorial
+    if request.password != ADMIN_PASSWORD: #did not decrypt/verify/hash/etc like in Catalin Stefan's tutorial
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
     
     access_token = auth_handler.create_access_token(data={"sub": request.username}) # TODO: FIX: ??  not sure if "request.username" is correct // i think it should just be my username from AWS ?? the single one, not necessarily the one passed in, but ig if its reached that line then its correct/the same...?
