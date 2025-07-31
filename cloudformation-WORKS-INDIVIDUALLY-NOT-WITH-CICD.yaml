@@ -39,8 +39,7 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
   KyueStudioLambdaFunctionV2:
-    # Type: AWS::Serverless::Function
-    Type: AWS::Lambda::Function
+    Type: AWS::Serverless::Function
     Properties:
       Description: !Sub
         - Stack ${AWS::StackName} Function ${ResourceName}
