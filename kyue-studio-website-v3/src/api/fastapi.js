@@ -8,7 +8,8 @@ import axios from 'axios';
 // this will be the only place we need the url!! good practice
 const api = axios.create({
     // how do i call my .env.local API_BASE_URL ??
-    baseURL: "https://hioroxjfpm52qt6flna72nv2gm0ycjuy.lambda-url.us-east-2.on.aws/" //"http://localhost:8000" // the url for fastapi backend server (from uvicorn)
+    baseURL: "https://v6ln2nysret2s3swtlhrf6m5gq0wcbzn.lambda-url.us-east-2.on.aws/"
+    // baseURL: "https://hioroxjfpm52qt6flna72nv2gm0ycjuy.lambda-url.us-east-2.on.aws/" //"http://localhost:8000" // the url for fastapi backend server (from uvicorn)
     // baseURL: baseURLGlobal
 })
 // TODO: update the other endpoints too like in BlogCard, tho that should be the only other place the https is called....
