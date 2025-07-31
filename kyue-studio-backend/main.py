@@ -14,7 +14,8 @@ import os
 from mangum import Mangum
 
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
-load_dotenv(".env.local") 
+if os.getenv("ENV_MODE") == "local":
+    load_dotenv(".env.local") 
 ALGORITHM = os.getenv("ALGORITHM")
 print ("Admin username from main.py:", ALGORITHM)
 
