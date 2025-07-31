@@ -131,8 +131,8 @@ def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
             # table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")) // doesnt work ???? 
             table = dynamodb.Table("BackendStackSeparateV1-BlogPostsMetadata-3FJP9QCRQ5NW")
             table_name = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
-            logger.info(f"BLOGPOSTSMETADATA_TABLE_NAME = {table}")
-            logger.info(f"os.getenv(BLOGPOSTSMETADATA_TABLE_NAME) = {table_name}")
+            print(f"BLOGPOSTSMETADATA_TABLE_NAME = {table}")
+            print(f"os.getenv(BLOGPOSTSMETADATA_TABLE_NAME) = {table_name}")
             response = table.scan()
             items = response.get("Items", [])
 

@@ -16,8 +16,17 @@ from mangum import Mangum
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
 if os.getenv("ENV_MODE") == "local":
     load_dotenv(".env.local") 
+
+# debugging, trying to call the environmental variables 
 ALGORITHM = os.getenv("ALGORITHM")
 print ("Admin username from main.py:", ALGORITHM)
+BLOGPOSTSMETADATA_TABLE_NAME = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
+print ("BLOGPOSTSMETADATA_TABLE_NAME from main.py:", BLOGPOSTSMETADATA_TABLE_NAME)
+ENV_MODE = os.getenv("ENV_MODE")
+print ("ENV_MODE from main.py:", ENV_MODE)
+KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
+print ("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME from main.py:", KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME)
+
 
 # The FastAPI application/instance
 app = FastAPI()
