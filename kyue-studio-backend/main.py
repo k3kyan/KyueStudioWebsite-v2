@@ -19,7 +19,7 @@ if os.getenv("ENV_MODE") == "local":
 
 # debugging, trying to call the environmental variables 
 ALGORITHM = os.getenv("ALGORITHM")
-print ("Admin username from main.py:", ALGORITHM)
+print ("Admin username from main.py v1:", ALGORITHM)
 BLOGPOSTSMETADATA_TABLE_NAME = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
 print ("BLOGPOSTSMETADATA_TABLE_NAME from main.py:", BLOGPOSTSMETADATA_TABLE_NAME)
 ENV_MODE = os.getenv("ENV_MODE")
