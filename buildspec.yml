@@ -23,6 +23,7 @@ phases:
             - echo "Building Vite React app..."
             - cd ../kyue-studio-website-v3
             - npm run build
+            # - sam build // sam redeploy ...? 
             
 artifacts:
     files:
