@@ -1,43 +1,144 @@
 Transform: AWS::Serverless-2016-10-31
 Resources:
+  # PURPOSE: Contact Form Messages DynamoDB Table
   ContactFormMessages:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
-        - AttributeName: timestamp
-          AttributeType: S
+        # - AttributeName: timestamp
+        #   AttributeType: S
       BillingMode: PAY_PER_REQUEST
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
+        # - AttributeName: timestamp
+        #   KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
+  # PURPOSE: Blog Posts Metadata DynamoDB Table (only the metadata for the blog posts, does not store thumbnails, images, or md content)
   BlogPostsMetadata:
     Type: AWS::DynamoDB::Table
     Properties:
+      # PrimaryKey:
+      #   Name: id
+      #   Type: String
+      # ProvisionedThroughput:
+      #   ReadCapacityUnits: 2
+      #   WriteCapacityUnits: 2
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
-        - AttributeName: timestamp
-          AttributeType: S
+        # - AttributeName: timestamp
+        #   AttributeType: S
       BillingMode: PAY_PER_REQUEST
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
+        # - AttributeName: timestamp
+        #   KeyType: RANGE
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
+  #  PURPOSE: S3 bucket to host single page app website + hosts content of blog posts (markdown, images, etc...) (referenced by the metadata in the blog posts metadata table)
   KyueStudioWebsiteS3BucketV2:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub kyuestudio-content-${AWS::AccountId}
+      # BucketEncryption:
+      #   ServerSideEncryptionConfiguration:
+      #   - BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      BucketName: !Sub kyuestudio-content-cfn-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
+  #  --------------------------- START OF SAM YAML TEMPLATE COPY PASTE - PURPOSE: S3 bucket to host single page app website + hosts content of blog posts (markdown, images, etc...) (referenced by the metadata in the blog posts metadata table)
+  KyueStudioWebsiteS3BucketV2Policy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref KyueStudioWebsiteS3BucketV2
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: PolicyForCloudFrontPrivateContent
+        Statement:
+        - Sid: AllowCloudFrontServicePrincipal
+          Effect: Allow
+          Principal:
+            Service: cloudfront.amazonaws.com
+          Action: s3:GetObject
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref KyueStudioWebsiteS3BucketV2, /*]]
+          Condition:
+            StringEquals:
+              AWS:SourceArn: !Join ['', ['arn:aws:cloudfront::', !Ref "AWS::AccountId",
+                  ':distribution/', !Ref CloudFrontDistribution]]
+  # CloudFront Distribution for hosting the single page app website
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+        - DomainName: !GetAtt KyueStudioWebsiteS3BucketV2.RegionalDomainName
+          Id: myS3Origin
+          OriginAccessControlId: !GetAtt CloudFrontOriginAccessControl.Id
+          S3OriginConfig:
+            OriginAccessIdentity: ''
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          CachedMethods:
+          - GET
+          - HEAD
+          TargetOriginId: myS3Origin
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: allow-all
+          MinTTL: 0
+          DefaultTTL: 3600
+          MaxTTL: 86400
+        PriceClass: PriceClass_200
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: whitelist
+            Locations:
+            - US
+            - CA
+            - GB
+            - DE
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+  CloudFrontOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${KyueStudioWebsiteS3BucketV2} OAC"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+  # ApplicationResourceGroup:
+  #   Type: AWS::ResourceGroups::Group
+  #   Properties:
+  #     Name:
+  #       Fn::Sub: ApplicationInsights-CFN-${AWS::StackName}
+  #     ResourceQuery:
+  #       Type: CLOUDFORMATION_STACK_1_0
+  # ApplicationInsightsMonitoring:
+  #   Type: AWS::ApplicationInsights::Application
+  #   Properties:
+  #     ResourceGroupName:
+  #       Ref: ApplicationResourceGroup
+  #     AutoConfigurationEnabled: 'true'
+  #  --------------------------- END OF SAM YAML TEMPLATE COPY PASTE - PURPOSE: The Lambda Handler function that allows this FastAPI backend to communicate with API Gateway endpoints ---------------------------
   KyueStudioLambdaFunctionV2:
     Type: AWS::Serverless::Function
     Properties:
@@ -46,9 +147,14 @@ Resources:
         - ResourceName: KyueStudioLambdaFunctionV2
       CodeUri: s3://kyuestudiowebsite/kyue-studio-backend/backend.zip # ?? !Ref KyueStudioWebsiteS3BucketV2 ??
       Handler: main.handler
+      # Runtime: nodejs20.x
+      # Architectures:
+      # - x86_64
       Runtime: python3.13
       MemorySize: 3008
       Timeout: 30
+      # MemorySize: 128
+      # Timeout: 100
       Tracing: Active
       FunctionUrlConfig:
         AuthType: NONE
@@ -62,6 +168,14 @@ Resources:
             - '*'
           AllowMethods:
             - '*'
+      # Events:
+      #   Api:
+      #     Type: Api
+      #     Properties:
+      #       Path: /
+      #       Method: GET
+      #       RestApiId:
+      #         Ref: ApiGatewayApi
       Environment:
         Variables:
           CONTACTFORMMESSAGES_TABLE_NAME: !Ref ContactFormMessages
@@ -77,6 +191,8 @@ Resources:
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME: !Ref KyueStudioWebsiteS3BucketV2
           KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_ARN: !GetAtt KyueStudioWebsiteS3BucketV2.Arn
           # LAMBDA_API_URL: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
+          # ??? (From SAM YAML): Make DynamoDB endpoint accessible as environment variable from function code during execution
+          ENDPOINT_OVERRIDE: ''
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref ContactFormMessages
@@ -108,6 +224,7 @@ Resources:
               Resource:
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}/*
+  # PURPOSE: ????? i think so i can access my lambda function publically...?
   KyueStudioLambdaFunctionV2UrlPermission: # ???? is this valid ????
     Type: AWS::Lambda::Permission
     Properties:
@@ -115,11 +232,23 @@ Resources:
       FunctionName: !Ref KyueStudioLambdaFunctionV2
       Principal: "*"
       FunctionUrlAuthType: NONE
+  #  PURPOSE: ????? i think so i cloudwatch can get my lambda function logs...?
   KyueStudioLambdaFunctionV2LogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${KyueStudioLambdaFunctionV2}
+  #  PURPOSE: API Gateway that connects lambda backend to frontend through endpoints, handles CORS etc
+  # This is an API gateway associated with the getByIdFunction and putItemFunctions
+  # ApiGatewayApi:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: Prod
+  #     Cors:
+  #       AllowMethods: "'OPTIONS, POST, GET'"
+  #       AllowHeaders: "'Content-Type'"
+  #       AllowOrigin: "'*'" #DO NOT USE THIS VALUE IN PRODUCTION - https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html
+
 
 # Outputs:
 #   LambdaFunctionUrl:
@@ -135,3 +264,29 @@ Resources:
 #     Value: !GetAtt KyueStudioLambdaFunctionV2.FunctionUrl
 #     Export:
 #       Name: KyueStudioLambdaFunctionUrl
+Outputs:
+  # --------------------DESCRIPTION
+  APIGatewayEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  # --------------------DESCRIPTION
+  CloudFrontDistributionId:
+    Description: CloudFront Distribution ID for hosting web front end
+    Value: !Ref CloudFrontDistribution
+  # --------------------DESCRIPTION
+  CloudFrontDistributionDomainName:
+    Description: CloudFront Distribution Domain Name for accessing web front end
+    Value: !GetAtt CloudFrontDistribution.DomainName
+  # --------------------DESCRIPTION
+  WebS3BucketName:
+    Description: S3 Bucket for hosting web frontend + backend content files
+    Value: !Ref KyueStudioWebsiteS3BucketV2
+# # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+# Globals:
+#   Function:
+#     Tracing: Active
+#     # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+#     LoggingConfig:
+#       LogFormat: JSON
+#   Api:
+#     TracingEnabled: true
