@@ -142,7 +142,7 @@ def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
 
         return response
 
-        # try:
+        # try: 
         #     dynamodb = boto3.resource("dynamodb") #currently using .resource instead of .client
         #     # table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")) // doesnt work ???? 
         #     table = dynamodb.Table("BackendStackSeparateV1-BlogPostsMetadata-3FJP9QCRQ5NW")
