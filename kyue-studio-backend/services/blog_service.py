@@ -24,6 +24,11 @@ import boto3
 # http://localhost:8000/thumbnails/aba2fcb9-9628-4f4a-a537-ea08fdac0990_steam-logo.jpg
 # http://localhost:8000/thumbnails/48f4d4fd-7aef-4801-87ab-b811837582ed_pixelcitybg.png
 
+
+dynamodb_client = boto3.client('dynamodb')
+
+
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # for @blog_router.post("/create-post")
 # async def create_post(
 # 1) save markdown content 
@@ -52,6 +57,7 @@ def save_markdown_content(post_id: uuid.UUID, content_file, UPLOAD_DIR: str):
             shutil.copyfileobj(content_file, f)
         return content_path
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # 2) save thumbnail 
 def save_thumbnail(
     post_id: uuid.UUID,
@@ -95,6 +101,7 @@ def save_thumbnail(
                 
             return thumbnail_url
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # 3) create and save full combined metadata
 def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
@@ -120,34 +127,43 @@ def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPL
         with metadata_path.open("w", encoding="utf-8") as f:
             json.dump(full_metadata.model_dump(), f, indent=2, default=str)
 
-
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # @blog_router.get("/posts", response_model=List[BlogPostMetadataSchema])
 # async def get_all_blog_posts():
 def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
-    ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
-    if ENV_MODE == "aws":
-        try:
-            dynamodb = boto3.resource("dynamodb") #currently using .resource instead of .client
-            # table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")) // doesnt work ???? 
-            table = dynamodb.Table("BackendStackSeparateV1-BlogPostsMetadata-3FJP9QCRQ5NW")
-            table_name = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
-            print(f"BLOGPOSTSMETADATA_TABLE_NAME = {table}")
-            print(f"os.getenv(BLOGPOSTSMETADATA_TABLE_NAME) = {table_name}")
-            response = table.scan()
-            items = response.get("Items", [])
+    # ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
+    if True: #ENV_MODE == "aws":
+        data = dynamodb_client.scan(TableName=os.environ["BLOGPOSTSMETADATA_TABLE_NAME"])
+        items = data["Items"]
+        response = {
+            # "statusCode": 200,
+            "body": json.dumps(items)
+        }
 
-            all_posts = []
-            for item in items:
-                try:
-                    post = BlogPostMetadataSchema(**item)
-                    all_posts.append(post)
-                except Exception as e:
-                    logger.warning(f"Skipped DynamoDB item due to error: {e}")
-            return all_posts
+        return response
 
-        except Exception as e:
-            logger.error(f"Error scanning DynamoDB: {e}")
-            return []
+        # try:
+        #     dynamodb = boto3.resource("dynamodb") #currently using .resource instead of .client
+        #     # table = dynamodb.Table(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")) // doesnt work ???? 
+        #     table = dynamodb.Table("BackendStackSeparateV1-BlogPostsMetadata-3FJP9QCRQ5NW")
+        #     table_name = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
+        #     print(f"BLOGPOSTSMETADATA_TABLE_NAME = {table}")
+        #     print(f"os.getenv(BLOGPOSTSMETADATA_TABLE_NAME) = {table_name}")
+        #     response = table.scan()
+        #     items = response.get("Items", [])
+
+        #     all_posts = []
+        #     for item in items:
+        #         try:
+        #             post = BlogPostMetadataSchema(**item)
+        #             all_posts.append(post)
+        #         except Exception as e:
+        #             logger.warning(f"Skipped DynamoDB item due to error: {e}")
+        #     return all_posts
+
+        # except Exception as e:
+        #     logger.error(f"Error scanning DynamoDB: {e}")
+        #     return []
 
     else:
         metadata_dir = Path(UPLOAD_DIR) / "blog_metadata"
@@ -166,6 +182,7 @@ def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
     # 1. since this will be different in dynamodb, just lowkey put all of it into one function that returns all the posts
 
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # @blog_router.get("/post/{post_id}", response_model=BlogPostMetadataSchema)
 # async def get_post_metadata(post_id: uuid.UUID):
 # 1. method to get the metadata (keep inside try catch block)
@@ -199,12 +216,14 @@ def load_single_post_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMe
         return BlogPostMetadataSchema(**metadata_dict)
 
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # @blog_router.delete("/post/{post_id}")
 # async def delete_blog_post(post_id: uuid.UUID, token: str = Depends(oauth2_scheme)):
 # this load_metadata method is redundant but it helps me think so. I only use it internally here. 
 def load_metadata(post_id: uuid.UUID, UPLOAD_DIR: str) -> BlogPostMetadataSchema:
     return load_single_post_metadata(post_id, UPLOAD_DIR)
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # 1. method to delete content markdown file (parameter is post_id)
 def delete_markdown_content(post_id: uuid.UUID, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
@@ -232,7 +251,8 @@ def delete_markdown_content(post_id: uuid.UUID, UPLOAD_DIR: str):
         if content_path.exists():
             content_path.unlink()
         # return "success" maybe?
-            
+     
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS       
 # 2. method to delete thumbnail if it's not the default (parameter is post_id)
 def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
@@ -268,6 +288,7 @@ def delete_thumbnail(post_id: uuid.UUID, UPLOAD_DIR: str):
                 thumbnail_path.unlink()
         # return "success" maybe?
 
+# TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
 # 3. method to delete the metadata file  (parameter is post_id)
 def delete_metadata(post_id: uuid.UUID, UPLOAD_DIR: str):
     ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
