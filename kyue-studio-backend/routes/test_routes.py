@@ -11,15 +11,18 @@ test_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
+# TODO: Does this matter if i do this before or after calling API router? 
 # Helper clients
-dynamodb = boto3.client("dynamodb")
+dynamodb_client = boto3.client('dynamodb')
 # secretsmanager = boto3.client("secretsmanager")
 
-# Example: Use env vars for names
-DYNAMODB_TABLE = os.getenv("CONTACT_MESSAGES_TABLE")
-S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
-# SECRET_NAME_ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
-ENV_MODE = os.getenv("ENV_MODE")  # optional env var
+# # TODO: RESEARCH: might have to call inside method...???? 
+# # Example: Use env vars for names
+# DYNAMODB_TABLE = os.getenv("CONTACT_MESSAGES_TABLE")
+# S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
+# # SECRET_NAME_ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+# ENV_MODE = os.getenv("ENV_MODE")  # optional env var
 
 # returns plain json response
 @test_router.get("/")
@@ -34,26 +37,33 @@ async def get_plain_json():
 # returns my dynamodb table name
 @test_router.get("/dynamodb-name")
 def get_dynamodb_table_name():
-    return {"table_name": DYNAMODB_TABLE}
+    # DYNAMODB_TABLE = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
+    dynamodb_table_data = dynamodb_client.scan(TableName=os.environ["BLOGPOSTSMETADATA_TABLE_NAME"])
+    items = dynamodb_table_data["Items"]
+    return {
+        # "table_name": dynamodb_table_data,
+        # "statusCode": 200,
+        "body": json.dumps(items)
+    }
 
-# returns the dynamodb table info (using boto3)
-@test_router.get("/dynamodb-info")
-def get_dynamodb_table_info():
-    try:
-        response = dynamodb.describe_table(TableName=DYNAMODB_TABLE)
-        return response["Table"]
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+# # returns the dynamodb table info (using boto3)
+# @test_router.get("/dynamodb-info")
+# def get_dynamodb_table_info():
+#     try:
+#         response = dynamodb.describe_table(TableName=DYNAMODB_TABLE)
+#         return response["Table"]
+#     except Exception as e:
+#         return JSONResponse(status_code=500, content={"error": str(e)})
     
-# returns my s3 bucket name
-@test_router.get("/s3-bucket")
-def get_s3_bucket():
-    return {"bucket_name": S3_BUCKET_NAME}
+# # returns my s3 bucket name
+# @test_router.get("/s3-bucket")
+# def get_s3_bucket():
+#     return {"bucket_name": S3_BUCKET_NAME}
 
-# returns a lambda environment variable ENV_MODE
-@test_router.get("/env-stage")
-def get_env_stage():
-    return {"env_mode": ENV_MODE}
+# # returns a lambda environment variable ENV_MODE
+# @test_router.get("/env-stage")
+# def get_env_stage():
+#     return {"env_mode": ENV_MODE}
 
 # # returns a secrets manager variable?
 # # this one probably wont work since secrets manager gave me specific code
