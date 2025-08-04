@@ -150,6 +150,7 @@ Resources:
       # Runtime: nodejs20.x
       # Architectures:
       # - x86_64
+      # TODO: why wont this update ?? it keeps uploading as python3.10 for some reason ???
       Runtime: python3.13
       MemorySize: 3008
       Timeout: 30
@@ -224,28 +225,28 @@ Resources:
               Resource:
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}
                 - !Sub arn:${AWS::Partition}:s3:::${KyueStudioWebsiteS3BucketV2}/*
-  # PURPOSE: ????? i think so i can access my lambda function publically...?
-  KyueStudioLambdaFunctionV2UrlPermission: # ???? is this valid ????
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunctionUrl
-      FunctionName: !Ref KyueStudioLambdaFunctionV2
-      Principal: "*"
-      FunctionUrlAuthType: NONE
-  #  PURPOSE: ????? i think so i cloudwatch can get my lambda function logs...?
+  # # PURPOSE: ????? i think so i can access my lambda function publically...?
+  # KyueStudioLambdaFunctionV2UrlPermission: # ???? is this valid ????
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunctionUrl
+  #     FunctionName: !Ref KyueStudioLambdaFunctionV2
+  #     Principal: "*"
+  #     FunctionUrlAuthType: NONE
+  # #  PURPOSE: ????? i think so i cloudwatch can get my lambda function logs...?
   KyueStudioLambdaFunctionV2LogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${KyueStudioLambdaFunctionV2}
-  #  PURPOSE: API Gateway that connects lambda backend to frontend through endpoints, handles CORS etc
-  # This is an API gateway associated with the getByIdFunction and putItemFunctions
+  # #  PURPOSE: API Gateway that connects lambda backend to frontend through endpoints, handles CORS etc
+  # # This is an API gateway associated with the getByIdFunction and putItemFunctions
   # ApiGatewayApi:
   #   Type: AWS::Serverless::Api
   #   Properties:
   #     StageName: Prod
   #     Cors:
-  #       AllowMethods: "'OPTIONS, POST, GET'"
+  #       AllowMethods: "'*'"
   #       AllowHeaders: "'Content-Type'"
   #       AllowOrigin: "'*'" #DO NOT USE THIS VALUE IN PRODUCTION - https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html
 
@@ -265,10 +266,10 @@ Resources:
 #     Export:
 #       Name: KyueStudioLambdaFunctionUrl
 Outputs:
-  # --------------------DESCRIPTION
-  APIGatewayEndpoint:
-    Description: API Gateway endpoint URL for Prod stage
-    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  # # --------------------DESCRIPTION
+  # APIGatewayEndpoint:
+  #   Description: API Gateway endpoint URL for Prod stage
+  #   Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   # --------------------DESCRIPTION
   CloudFrontDistributionId:
     Description: CloudFront Distribution ID for hosting web front end

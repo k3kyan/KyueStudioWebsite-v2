@@ -12,6 +12,10 @@ from auth import auth_handler
 from dotenv import load_dotenv, dotenv_values, find_dotenv
 import os
 from mangum import Mangum
+import boto3
+import json
+
+
 
 # loads the .env.local file for whole project, only needs import os for other files to access .env.local variables
 if os.getenv("ENV_MODE") == "local":
@@ -20,12 +24,30 @@ if os.getenv("ENV_MODE") == "local":
 # debugging, trying to call the environmental variables 
 ALGORITHM = os.getenv("ALGORITHM")
 print ("Admin username from main.py v1:", ALGORITHM)
-BLOGPOSTSMETADATA_TABLE_NAME = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
-print ("BLOGPOSTSMETADATA_TABLE_NAME from main.py:", BLOGPOSTSMETADATA_TABLE_NAME)
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+print ("BLOGPOSTSMETADATA_TABLE_NAME from main.py:", ADMIN_USERNAME)
 ENV_MODE = os.getenv("ENV_MODE")
 print ("ENV_MODE from main.py:", ENV_MODE)
-KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME = os.getenv("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME")
-print ("KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME from main.py:", KYUESTUDIOWEBSITES3BUCKETV2_BUCKET_NAME)
+# BLOGPOSTSMETADATA_TABLE_NAME = os.getenv("BLOGPOSTSMETADATA_TABLE_NAME")
+# print ("BLOGPOSTSMETADATA_TABLE_NAME from main.py:", BLOGPOSTSMETADATA_TABLE_NAME)
+
+
+dynamodb_client = boto3.client('dynamodb')
+# try{
+print(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
+data = dynamodb_client.scan(TableName=os.environ["BLOGPOSTSMETADATA_TABLE_NAME"])
+items = data["Items"]
+response = {
+    # "statusCode": 200,
+    "body": json.dumps(items)
+}
+print(response)
+# } else {
+#     print("Error loading metadata from DynamoDB")
+# }
+
+
+
 
 
 # The FastAPI application/instance

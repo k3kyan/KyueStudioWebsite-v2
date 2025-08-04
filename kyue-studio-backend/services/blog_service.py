@@ -10,6 +10,8 @@ from schemas.blog_schemas import BlogPostMetadataSchema, BlogPostMetadataPOSTSch
 import os
 import boto3
 
+dynamodb_client = boto3.client('dynamodb')
+
 
 # is this where the schemas get sorted into different models / schemas ????
 
@@ -24,8 +26,6 @@ import boto3
 # http://localhost:8000/thumbnails/aba2fcb9-9628-4f4a-a537-ea08fdac0990_steam-logo.jpg
 # http://localhost:8000/thumbnails/48f4d4fd-7aef-4801-87ab-b811837582ed_pixelcitybg.png
 
-
-dynamodb_client = boto3.client('dynamodb')
 
 
 # TODO: ADJUST FOR PROPER AWS RESOURCE CALLS
@@ -133,6 +133,7 @@ def save_metadata(post_id: uuid.UUID, full_metadata: BlogPostMetadataSchema, UPL
 def load_posts_metadata(UPLOAD_DIR: str) -> List[BlogPostMetadataSchema]:
     # ENV_MODE = os.getenv("ENV_MODE", "aws").lower()
     if True: #ENV_MODE == "aws":
+        print(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
         data = dynamodb_client.scan(TableName=os.environ["BLOGPOSTSMETADATA_TABLE_NAME"])
         items = data["Items"]
         response = {
