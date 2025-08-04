@@ -3,7 +3,10 @@ Resources:
   # PURPOSE: Contact Form Messages DynamoDB Table
   ContactFormMessages:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete #TEMP for now
+    UpdateReplacePolicy: Delete #TEMP for now
     Properties:
+      TableName: !Sub kyue-contact-form-messages-table-CICD-CLOUDFORMATION-${AWS::AccountId}-${Environment}
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
@@ -20,7 +23,10 @@ Resources:
   # PURPOSE: Blog Posts Metadata DynamoDB Table (only the metadata for the blog posts, does not store thumbnails, images, or md content)
   BlogPostsMetadata:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete #TEMP for now
+    UpdateReplacePolicy: Delete #TEMP for now
     Properties:
+      TableName: !Sub kyue-blog-posts-metadata-table-CICD-CLOUDFORMATION-${AWS::AccountId}-${Environment}
       # PrimaryKey:
       #   Name: id
       #   Type: String
@@ -43,13 +49,15 @@ Resources:
   #  PURPOSE: S3 bucket to host single page app website + hosts content of blog posts (markdown, images, etc...) (referenced by the metadata in the blog posts metadata table)
   KyueStudioWebsiteS3BucketV2:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Properties:
       # BucketEncryption:
       #   ServerSideEncryptionConfiguration:
       #   - BucketKeyEnabled: true
       VersioningConfiguration:
         Status: Enabled
-      BucketName: !Sub kyuestudio-content-cfn-${AWS::AccountId}
+      BucketName: !Sub kyuestudio-content-cfn-CICD-CLOUDFORMATION-${AWS::AccountId}-${Environment}
       WebsiteConfiguration:
         IndexDocument: index.html
   #  --------------------------- START OF SAM YAML TEMPLATE COPY PASTE - PURPOSE: S3 bucket to host single page app website + hosts content of blog posts (markdown, images, etc...) (referenced by the metadata in the blog posts metadata table)
