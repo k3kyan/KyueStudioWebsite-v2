@@ -174,7 +174,7 @@ Resources:
       #     Type: Api
       #     Properties:
       #       Path: /
-      #       Method: GET
+      #       Method: GET 
       #       RestApiId:
       #         Ref: ApiGatewayApi
       Environment:

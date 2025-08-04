@@ -38,7 +38,6 @@ print(os.getenv("BLOGPOSTSMETADATA_TABLE_NAME"))
 data = dynamodb_client.scan(TableName=os.environ["BLOGPOSTSMETADATA_TABLE_NAME"])
 items = data["Items"]
 response = {
-    # "statusCode": 200,
     "body": json.dumps(items)
 }
 print(response)
